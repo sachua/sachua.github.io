@@ -28,7 +28,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 
-.subnav-search{width:222px;margin-top:8px;margin-right:8px;}
+.subnav-search{width:230px;margin-top:8px;margin-right:8px;}
 .subnav-search-input{width:160px;border-top-right-radius:0px;border-bottom-right-radius:0px;}
 .subnav-search button{padding:5px 8px;border-top-left-radius:0px;border-bottom-left-radius:0px;}
 
@@ -73,7 +73,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div id="tagLable" style="margin-bottom: 16px;"></div>
 <nav class="SideNav border"></nav>
-<div class="notFind" style="display:none;font-size:24px;margin:8px;">Not Find</div>
+<div class="notFind" style="display:none;font-size:24px;margin:8px;">No articles on</div>
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://sachua.github.io"> Chua Song Ann </a>
 <p>
@@ -175,7 +175,7 @@ function showList(){
         center.setAttribute("class","d-flex flex-items-center");
 
         svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-        path=document.createElementNS("http://www.w3.org/2000/svg","path"); 
+        path=document.createElementNS("http://www.w3.org/2000/svg","path");
         span=document.createElement("span");
         svg.setAttributeNS(null,"class","SideNav-icon octicon");
         svg.setAttributeNS(null,"style","witdh:16px;height:16px");
