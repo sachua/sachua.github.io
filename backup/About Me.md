@@ -1,6 +1,4 @@
-<p align="center" width="100%">
-    <img src="https://avatars.githubusercontent.com/u/41395198?s=150">
-</p>
+![Me!](https://avatars.githubusercontent.com/u/41395198?s=150)
 
 Hi, I'm Song Ann, and this blog records various snippets of information from my exploration in tech. 
 
