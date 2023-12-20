@@ -1,9 +1,9 @@
 {
-    "title":"Chua Song Ann",
-    "displayTitle":"Chua Song Ann",
-    "subTitle":"Musings of a tinkerer",
+    "title":"Snippets",
+    "displayTitle":"Snippets",
+    "subTitle":"Snippets of learnings from a tinkerer exploring the world of tech!",
     "homeUrl":"http://sachua.github.io",
-    "avatarUrl":"https://avatars.githubusercontent.com/u/41395198",
+    "avatarUrl":"https://raw.githubusercontent.com/sachua/sachua.github.io/main/lightning.svg",
     "faviconUrl":"https://raw.githubusercontent.com/sachua/sachua.github.io/main/lightning.svg",
     "singlePage":["about"],
     "GMEEK_VERSION":"main"
