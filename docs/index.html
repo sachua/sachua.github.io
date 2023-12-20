@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Musings of a tinkerer">
     <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
-    <link rel="icon" href="https://raw.githubusercontent.com/sachua/sachua.github.io/main/favicon.ico">
+    <link rel="icon" href="https://raw.githubusercontent.com/sachua/sachua.github.io/main/lightning.svg">
     <script>
         if(localStorage.getItem("meek_theme")==null){}
         else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
@@ -52,7 +52,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <body>
     <div id="header">
 <h1>
-    <img src="https://avatars.githubusercontent.com/u/41395198?v=4" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle" href="https://sachua.github.io/">Chua Song Ann</a>
+    <img src="https://avatars.githubusercontent.com/u/41395198" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle" href="https://sachua.github.io/">Chua Song Ann</a>
     </h1>
 <div class="title-right">
     <a href="http://sachua.github.io/tag.html"><button id="buttonSearch" class="btn btn-invisible circle" title="Search">
@@ -60,7 +60,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
             <path id="pathSearch" fill-rule="evenodd"></path>
         </svg>
     </button></a>
-    
+    <a href="http://sachua.github.io/about.html"><button class="btn btn-invisible circle" title="About Me">
+        <svg class="octicon" width="16" height="16" >
+            <path id="About Me" fill-rule="evenodd"></path>
+        </svg>
+    </button></a>
     <a href="http://sachua.github.io/rss.xml" target="_blank"><button id="buttonRSS" class="btn btn-invisible circle" title="RSS">
         <svg class="octicon" width="16" height="16" >
             <path id="pathRSS" fill-rule="evenodd"></path>
@@ -76,18 +80,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div style="margin-bottom: 16px;">Musings of a tinkerer</div>
 <nav class="SideNav border">
-<a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/About%20Me.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="witdh:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">About Me</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#5F4A1E"><object><a style="color:#fff" href="http://sachua.github.io/tag.html#about">about</a></object></span>
-        <span class="Label LabelTime" style="background-color:#A333D0">2023-12-20</span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/test.html">
+<a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/test.html">
     <div class="d-flex flex-items-center">
         <svg class="SideNav-icon octicon" style="witdh:16px;height:16px"><path class="svgTop0" d=""></path>
         </svg>
@@ -163,7 +156,7 @@ for(var i=0;i<iconPost.length;i++){
     iconPost[i].setAttribute("d",IconList["post"]);
 }
 
-
+document.getElementById("About Me").setAttribute("d",value=IconList["about"]);
 </script>
 
 </html>
