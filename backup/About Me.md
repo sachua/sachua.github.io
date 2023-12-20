@@ -1,4 +1,4 @@
-[![Me!](https://avatars.githubusercontent.com/u/41395198?s=200)](https://github.com/sachua/)
+<img src="https://avatars.githubusercontent.com/u/41395198?s=200" width="150" height="150">
 
 Hi, I'm Song Ann, and this blog records various snippets of information from my exploration in tech. 
 
