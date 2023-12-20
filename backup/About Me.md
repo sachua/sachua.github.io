@@ -4,7 +4,6 @@
   </picture>
 </p>
 
-Hi, I'm Song Ann, and this blog records various snippets of information from my exploration in tech. 
+Hi, I'm Song Ann, a cloud engineer based in Singapore. As a tinkerer at heart and a lifelong learner, I love exploring and experimenting with new technologies!
 
-Github: https://github.com/sachua/
-LinkedIn: https://www.linkedin.com/in/chuasongann/
+This blog records various snippets of my learnings and takeaways from my exploration in tech. 
