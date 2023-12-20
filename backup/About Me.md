@@ -1,6 +1,8 @@
-<picture>
-  <img src="https://avatars.githubusercontent.com/u/41395198" width="150" height="150"/>
-</picture>
+<p>
+  <picture>
+    <img src="https://avatars.githubusercontent.com/u/41395198" width="150" height="150"/>
+  </picture>
+</p>
 
 Hi, I'm Song Ann, and this blog records various snippets of information from my exploration in tech. 
 
