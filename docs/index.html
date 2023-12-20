@@ -60,7 +60,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
             <path id="pathSearch" fill-rule="evenodd"></path>
         </svg>
     </button></a>
-    
+    <a href="http://sachua.github.io/about.html"><button class="btn btn-invisible circle" title="About Me">
+        <svg class="octicon" width="16" height="16" >
+            <path id="About Me" fill-rule="evenodd"></path>
+        </svg>
+    </button></a>
     <a href="http://sachua.github.io/rss.xml" target="_blank"><button id="buttonRSS" class="btn btn-invisible circle" title="RSS">
         <svg class="octicon" width="16" height="16" >
             <path id="pathRSS" fill-rule="evenodd"></path>
@@ -76,18 +80,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div style="margin-bottom: 16px;">Musings of a tinkerer</div>
 <nav class="SideNav border">
-<a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/About%20Me.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="witdh:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">About Me</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#5F4A1E"><object><a style="color:#fff" href="http://sachua.github.io/tag.html#About">About</a></object></span>
-        <span class="Label LabelTime" style="background-color:#A333D0">2023-12-20</span>
-    </div>
-</a>
+
 </nav>
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://sachua.github.io"> Chua Song Ann </a>
@@ -152,7 +145,7 @@ for(var i=0;i<iconPost.length;i++){
     iconPost[i].setAttribute("d",IconList["post"]);
 }
 
-
+document.getElementById("About Me").setAttribute("d",value=IconList["about"]);
 </script>
 
 </html>
