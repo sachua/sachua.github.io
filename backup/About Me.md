@@ -6,4 +6,4 @@
 
 Hi, I'm Song Ann, a cloud engineer based in Singapore. As a tinkerer at heart and a lifelong learner, I love exploring and experimenting with new technologies!
 
-This blog records various snippets of my learnings and takeaways from my exploration in tech. 
+This blog records various snippets of learnings and takeaways from my exploration in tech. 
