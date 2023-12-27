@@ -1,6 +1,6 @@
 Local development on Kubernetes can be a hassle since the resources required to run a full Kubernetes cluster can be quite heavy.
 
-Today, we will explore running a single node Kubernetes cluster for your local development needs using Docker Compose.
+In this post, we will explore running a single node Kubernetes cluster for your local development needs using Docker Compose.
 
 ## Kubernetes Distribution
 
