@@ -14,7 +14,7 @@
     </script>
     
 <title>Running Kubernetes in Containers</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -69,7 +69,143 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<p>test</p>
+<p>Local development on Kubernetes can be a hassle since the resources required to run a Kubernetes node can be quite heavy.</p>
+<p>Today, we will explore running a single node Kubernetes cluster for your local development needs using Docker Compose.</p>
+<h2>Kubernetes Distribution</h2>
+<p>We will be focusing on 2 different Kubernetes distributions today: <code class="notranslate">K3s</code> and <code class="notranslate">RKE2</code>.</p>
+<p><a href="https://k3s.io/" rel="nofollow">K3s</a> is a Rancher's lightweight, fully compliant Kubernetes distribution, that is packaged into a single binary. It is most commonly used for edge computing or IoT use cases, and there are projects such as <a href="https://k3d.io/" rel="nofollow">k3d</a> which is a lightweight wrapper to run K3s in docker.</p>
+<p><a href="https://rke2.io/" rel="nofollow">RKE2</a> is Rancher's next-generation Kubernetes distribution, combining RKE1's close alignment with upstream Kubernetes and K3s's deployment model for ease-of-operations. It also comes with FIPS 140-2 compliance.</p>
+<h2>K3s in Docker</h2>
+<p>k3d provides a simple solution to create k3s clusters for local development, but we are looking for an even simpler solution that only uses Docker and Docker Compose.</p>
+<p>You only need a <code class="notranslate">docker-compose.yml</code> file:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.7<span class="pl-pds">'</span></span>
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">server</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">rancher/k3s:v1.24.0-rc1-k3s1-amd64</span>
+    <span class="pl-ent">networks</span>:
+    - <span class="pl-s">default</span>
+    <span class="pl-ent">command</span>: <span class="pl-s">server</span>
+    <span class="pl-ent">tmpfs</span>:
+    - <span class="pl-s">/run</span>
+    - <span class="pl-s">/var/run</span>
+    <span class="pl-ent">ulimits</span>:
+      <span class="pl-ent">nproc</span>: <span class="pl-c1">65535</span>
+      <span class="pl-ent">nofile</span>:
+        <span class="pl-ent">soft</span>: <span class="pl-c1">65535</span>
+        <span class="pl-ent">hard</span>: <span class="pl-c1">65535</span>
+    <span class="pl-ent">privileged</span>: <span class="pl-c1">true</span>
+    <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
+    <span class="pl-ent">environment</span>:
+    <span class="pl-c"><span class="pl-c">#</span> - K3S_TOKEN=${K3S_PASSWORD_1} # Only required if we are running more than 1 node</span>
+    - <span class="pl-s">K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml</span>
+    - <span class="pl-s">K3S_KUBECONFIG_MODE=666</span>
+    <span class="pl-ent">volumes</span>:
+    - <span class="pl-s">k3s-server:/var/lib/rancher/k3s</span>
+    <span class="pl-c"><span class="pl-c">#</span> This is just so that we get the kubeconfig file out</span>
+    - <span class="pl-s">./k3s_data/kubeconfig:/output</span>
+    - <span class="pl-s">./k3s_data/docker_images:/var/lib/rancher/k3s/agent/images</span>
+    <span class="pl-ent">expose</span>:
+    - <span class="pl-s"><span class="pl-pds">"</span>6443<span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> Kubernetes API Server</span>
+    - <span class="pl-s"><span class="pl-pds">"</span>80<span class="pl-pds">"</span></span>    <span class="pl-c"><span class="pl-c">#</span> Ingress controller port 80</span>
+    - <span class="pl-s"><span class="pl-pds">"</span>443<span class="pl-pds">"</span></span>   <span class="pl-c"><span class="pl-c">#</span> Ingress controller port 443</span>
+    <span class="pl-ent">ports</span>:
+    - <span class="pl-c1">6443:6443</span>
+<span class="pl-ent">volumes</span>:
+  <span class="pl-ent">k3s-server</span>: <span class="pl-s">{}</span>
+<span class="pl-ent">networks</span>:
+  <span class="pl-ent">default</span>:
+    <span class="pl-ent">ipam</span>:
+      <span class="pl-ent">driver</span>: <span class="pl-s">default</span>
+      <span class="pl-ent">config</span>:
+        - <span class="pl-ent">subnet</span>: <span class="pl-s"><span class="pl-pds">"</span>172.98.0.0/16<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> Self-defined subnet on local machine</span></pre></div>
+<p>Create the <code class="notranslate">k3s_data</code> directory and run the <code class="notranslate">docker compose up</code> command:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p k3s_data/kubeconfig
+docker compose up -d</pre></div>
+<p>All that is left is to alias your kubectl to use your K3s kubeconfig, and you can start interacting with your K3s Kubernetes cluster!</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">alias</span> k=<span class="pl-s"><span class="pl-pds">'</span>kubectl --kubeconfig <span class="pl-pds">'</span></span><span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${PWD}</span><span class="pl-pds">"</span></span><span class="pl-s"><span class="pl-pds">'</span>/k3s_data/kubeconfig/kubeconfig.yaml<span class="pl-pds">'</span></span>
+k get pods -A
+
+<span class="pl-c"><span class="pl-c">#</span> NAMESPACE     NAME                                      READY   STATUS      RESTARTS   AGE</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   local-path-provisioner-7b7dc8d6f5-q5ldx   1/1     Running     0          4m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   coredns-b96499967-kw4gt                   1/1     Running     0          4m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   metrics-server-668d979685-cvxmv           1/1     Running     0          4m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-traefik-crd-wrjz6            0/1     Completed   0          4m24s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-traefik-smxtr                0/1     Completed   1          4m24s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   svclb-traefik-pxlgs                       2/2     Running     0          3m51s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   traefik-7cd4fcff68-lbg4m                  1/1     Running     0          3m51s</span></pre></div>
+<h2>RKE2 in Docker</h2>
+<p>RKE2 is slightly more complicated as there isn't a readily available <code class="notranslate">Dockerfile</code>. We will have to build our own container image and publish it to your container registry of choice.</p>
+<p>The Dockerfile can be found <a href="https://github.com/rancher/rke2/blob/master/Dockerfile">here</a>. Alternatively, I have already built the container image and you can copy my image.</p>
+<p>Once again, the <code class="notranslate">docker-compose.yml</code> file:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.7<span class="pl-pds">'</span></span>
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">server</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">sachua/rke2-test:v1.27.1-rke2r1</span>
+    <span class="pl-ent">networks</span>:
+    - <span class="pl-s">default</span>
+    <span class="pl-ent">command</span>: <span class="pl-s">server</span>
+    <span class="pl-ent">tmpfs</span>:
+    - <span class="pl-s">/run</span>
+    - <span class="pl-s">/var/run</span>
+    <span class="pl-ent">ulimits</span>:
+      <span class="pl-ent">nproc</span>: <span class="pl-c1">65535</span>
+      <span class="pl-ent">nofile</span>:
+        <span class="pl-ent">soft</span>: <span class="pl-c1">65535</span>
+        <span class="pl-ent">hard</span>: <span class="pl-c1">65535</span>
+    <span class="pl-ent">privileged</span>: <span class="pl-c1">true</span>
+    <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
+    <span class="pl-ent">environment</span>:
+   <span class="pl-c"><span class="pl-c">#</span> - RKE2_TOKEN=${RKE2_PASSWORD_1} # Only required if we are running more than 1 node</span>
+    - <span class="pl-s">RKE2_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml</span>
+    - <span class="pl-s">RKE2_KUBECONFIG_MODE=666</span>
+    <span class="pl-ent">volumes</span>:
+    - <span class="pl-s">rke2-server:/var/lib/rancher/rke2</span>
+    <span class="pl-c"><span class="pl-c">#</span> This is just so that we get the kubeconfig file out</span>
+    - <span class="pl-s">./rke2_data/kubeconfig:/output</span>
+    - <span class="pl-s">./rke2_data/docker_images:/var/lib/rancher/rke2/agent/images</span>
+    <span class="pl-ent">expose</span>:
+    - <span class="pl-s"><span class="pl-pds">"</span>6443<span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> Kubernetes API Server</span>
+    - <span class="pl-s"><span class="pl-pds">"</span>80<span class="pl-pds">"</span></span>    <span class="pl-c"><span class="pl-c">#</span> Ingress controller port 80</span>
+    - <span class="pl-s"><span class="pl-pds">"</span>443<span class="pl-pds">"</span></span>   <span class="pl-c"><span class="pl-c">#</span> Ingress controller port 443</span>
+    <span class="pl-ent">ports</span>:
+    - <span class="pl-c1">6443:6443</span>
+<span class="pl-ent">volumes</span>:
+  <span class="pl-ent">rke2-server</span>: <span class="pl-s">{}</span>
+<span class="pl-ent">networks</span>:
+  <span class="pl-ent">default</span>:
+    <span class="pl-ent">ipam</span>:
+      <span class="pl-ent">driver</span>: <span class="pl-s">default</span>
+      <span class="pl-ent">config</span>:
+        - <span class="pl-ent">subnet</span>: <span class="pl-s"><span class="pl-pds">"</span>172.98.0.0/16<span class="pl-pds">"</span></span></pre></div>
+<p>Create the <code class="notranslate">rke2_data</code> directory and run the <code class="notranslate">docker compose up</code> command:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p rke2_data/kubeconfig
+docker compose up -d</pre></div>
+<p>Finally, alias your kubectl to use your RKE2 kubeconfig, and you can start interacting with your RKE2 Kubernetes cluster!<br>
+<em>RKE2 might take awhile more as it is more resource intensive than K3s</em></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">alias</span> k=<span class="pl-s"><span class="pl-pds">'</span>kubectl --kubeconfig <span class="pl-pds">'</span></span><span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${PWD}</span><span class="pl-pds">"</span></span><span class="pl-s"><span class="pl-pds">'</span>/rke2_data/kubeconfig/kubeconfig.yaml<span class="pl-pds">'</span></span>
+k get pods -A
+
+<span class="pl-c"><span class="pl-c">#</span> NAMESPACE     NAME                                                   READY   STATUS      RESTARTS        AGE</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   cloud-controller-manager-7e3475f79d6d                  1/1     Running     1 (2m34s ago)   2m35s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   etcd-7e3475f79d6d                                      1/1     Running     0               116s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-canal-vznnf                          0/1     Completed   1               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-coredns-7mdnk                        0/1     Completed   0               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-ingress-nginx-xt8s8                  0/1     Completed   0               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-metrics-server-gzjmd                 0/1     Completed   0               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-snapshot-controller-crd-452h4        0/1     Completed   0               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-snapshot-controller-mlfz8            0/1     Completed   2               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   helm-install-rke2-snapshot-validation-webhook-c6zrt    0/1     Completed   0               2m23s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   kube-apiserver-7e3475f79d6d                            1/1     Running     0               2m35s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   kube-controller-manager-7e3475f79d6d                   1/1     Running     0               2m37s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   kube-proxy-7e3475f79d6d                                1/1     Running     0               2m34s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   kube-scheduler-7e3475f79d6d                            1/1     Running     0               2m37s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-canal-8ntsg                                       2/2     Running     0               2m2s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-coredns-rke2-coredns-5896cccb79-hngm5             1/1     Running     0               2m3s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-coredns-rke2-coredns-autoscaler-f6766cdc9-d7b2m   1/1     Running     0               2m3s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-ingress-nginx-controller-vvwcp                    0/1     Running     0               48s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-metrics-server-6d45f6cb4d-wl7t8                   1/1     Running     0               72s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-snapshot-controller-7bf6d7bf5f-v9lfb              1/1     Running     0               58s</span>
+<span class="pl-c"><span class="pl-c">#</span> kube-system   rke2-snapshot-validation-webhook-b65d46c9f-988vf       1/1     Running     0               70s</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">comments</button>
 <div class="comments" id="comments"></div>
