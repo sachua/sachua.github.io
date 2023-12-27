@@ -4,7 +4,7 @@ In this post, we will explore running a single node Kubernetes cluster for your 
 
 ## Kubernetes Distribution
 
-We will be focusing on 2 different Kubernetes distributions today: `K3s` and `RKE2`.
+We will be focusing on 2 different Kubernetes distributions: `K3s` and `RKE2`.
 
 [K3s](https://k3s.io/) is a Rancher's lightweight, fully compliant Kubernetes distribution, that is packaged into a single binary. It is most commonly used for edge computing or IoT use cases, and there are projects such as [k3d](https://k3d.io/) which is a lightweight wrapper to run K3s in docker.
 
