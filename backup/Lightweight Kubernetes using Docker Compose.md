@@ -84,7 +84,7 @@ k get pods -A
 
 ## RKE2 in Docker
 
-RKE2 is slightly more complicated as there isn't a readily available `Dockerfile`. We will have to build our own container image and publish it to your container registry of choice.
+RKE2 is slightly more complicated as there isn't a readily available `Dockerfile`. We will have to build our own container image and publish it to our container registry of choice.
 
 The Dockerfile can be found [here](https://github.com/rancher/rke2/blob/master/Dockerfile). Alternatively, I have already built the container image and you can copy my image.
 
