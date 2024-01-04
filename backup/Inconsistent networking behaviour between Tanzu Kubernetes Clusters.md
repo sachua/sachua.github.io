@@ -1,4 +1,4 @@
-When working with vSphere with Tanzu on NSX-T, the cluster-to-cluster communication between Tanzu Kubernetes Clusters on the same vSphere Workload Management Cluster was observed to deviate from other types of communication traffic.
+When working with vSphere with Tanzu on NSX-T, the cluster-to-cluster communication between Tanzu Kubernetes Clusters on the same vSphere Workload Management Cluster was observed to deviate from other combinations of communication.
 
 This means that we cannot use the Tanzu Supervisor Namespace Egress IP as the source IP when we create Gateway Firewall rules to allow cluster-to-cluster communication.
 

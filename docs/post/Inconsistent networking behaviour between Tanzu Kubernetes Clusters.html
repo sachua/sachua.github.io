@@ -70,7 +70,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<p>When working with vSphere with Tanzu on NSX-T, the cluster-to-cluster communication between Tanzu Kubernetes Clusters on the same vSphere Workload Management Cluster was observed to deviate from other types of communication traffic.</p>
+<p>When working with vSphere with Tanzu on NSX-T, the cluster-to-cluster communication between Tanzu Kubernetes Clusters on the same vSphere Workload Management Cluster was observed to deviate from other combinations of communication.</p>
 <p>This means that we cannot use the Tanzu Supervisor Namespace Egress IP as the source IP when we create Gateway Firewall rules to allow cluster-to-cluster communication.</p>
 <p>This is due to the default NAT rules that NSX-T creates when a new Supervisor Namespace is created:</p>
 <p align="center">
