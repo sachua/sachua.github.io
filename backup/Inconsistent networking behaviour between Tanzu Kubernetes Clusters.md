@@ -14,15 +14,15 @@ A quick look at the 3 NAT rules set:
 
 1. **No SNAT for traffic going from Node IPs (10.222.0.0/16) to Ingress IPs (10.223.112.0/20)**
 
-    - This means SNAT is applied to any traffic going from Cluster A to Cluster B
+    - No SNAT is applied to any traffic going from Cluster A to Cluster B
  
 2.  **No SNAT for traffic going from Node IPs (10.222.0.0/16) to Node IPs (10.222.0.0/16)**
 
-    - This means SNAT is applied to any traffic going from Node A to Node B
+    - No SNAT is applied to any traffic going from Node A to Node B
 
 3. **SNAT for all other traffic, translated to the Tanzu Supervisor Namespace Egress IP (10.223.136.18)**
 
-    - This means SNAT is applied to any other traffic, such as from Cluster A to another Virtual Machine in another segment, and egress the Tanzu Supervisor Namespace segment through the Tanzu Supervisor Namespace Egress IP
+    - SNAT is applied to any other traffic, such as from Cluster A to another Virtual Machine in another segment, and egress the Tanzu Supervisor Namespace segment through the Tanzu Supervisor Namespace Egress IP
 
 ## What does this mean?
 

@@ -83,19 +83,19 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>
 <p><strong>No SNAT for traffic going from Node IPs (10.222.0.0/16) to Ingress IPs (10.223.112.0/20)</strong></p>
 <ul>
-<li>This means SNAT is applied to any traffic going from Cluster A to Cluster B</li>
+<li>No SNAT is applied to any traffic going from Cluster A to Cluster B</li>
 </ul>
 </li>
 <li>
 <p><strong>No SNAT for traffic going from Node IPs (10.222.0.0/16) to Node IPs (10.222.0.0/16)</strong></p>
 <ul>
-<li>This means SNAT is applied to any traffic going from Node A to Node B</li>
+<li>No SNAT is applied to any traffic going from Node A to Node B</li>
 </ul>
 </li>
 <li>
 <p><strong>SNAT for all other traffic, translated to the Tanzu Supervisor Namespace Egress IP (10.223.136.18)</strong></p>
 <ul>
-<li>This means SNAT is applied to any other traffic, such as from Cluster A to another Virtual Machine in another segment, and egress the Tanzu Supervisor Namespace segment through the Tanzu Supervisor Namespace Egress IP</li>
+<li>SNAT is applied to any other traffic, such as from Cluster A to another Virtual Machine in another segment, and egress the Tanzu Supervisor Namespace segment through the Tanzu Supervisor Namespace Egress IP</li>
 </ul>
 </li>
 </ol>
