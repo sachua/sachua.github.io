@@ -96,4 +96,6 @@ These rules are applied to 2 security groups, by clicking the security groups, w
 
 We can then select this security group as our source when creating Gateway Firewall rules, and the network communication will work as desired.
 
-The downside is there is no fine-grained controls for Tanzu Kubernetes Clusters that exist in the same Tanzu Supervisor Namespace, as the security group contains everything. This means for Cluster A and Cluster B, existing in the same Tanzu Supervisor Namespace, we cannot allow traffic from Cluster A but deny traffic from Cluster B.
+The downside is this solution does not have the ability to set fine-grained rules for Tanzu Kubernetes Clusters that exist in the same Tanzu Supervisor Namespace, as the security group contains everything.
+
+This means for Cluster A and Cluster B, both existing in the same Tanzu Supervisor Namespace, we cannot allow traffic from Cluster A but deny traffic from Cluster B.
