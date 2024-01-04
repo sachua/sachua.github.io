@@ -31,7 +31,6 @@ A quick look at the 3 NAT rules set:
 <p align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/57b57f99-1da9-4a0a-9430-3986f0e30c00">
-  <source media="(prefers-color-scheme: light)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/0c048f66-4e49-4d6c-9865-af9d66108a48">
   <img alt="Rule 1 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/0c048f66-4e49-4d6c-9865-af9d66108a48" width="1000">
 </picture>
 </p>
@@ -43,7 +42,6 @@ For Cluster-to-Cluster traffic, SNAT rule 1 is applied, Cluster B will see the i
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/897e4a6d-b4bd-40f4-9b34-2cc910d19a35">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/527e70b3-0586-4bc8-8408-53750e2b1272">
     <img alt="Rule 2 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/527e70b3-0586-4bc8-8408-53750e2b1272" width="350">
   </picture>
 </p>
@@ -55,7 +53,6 @@ For traffic within the Cluster, SNAT rule 2 is applied, Nodes within Cluster A w
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/ea16758c-a8c7-4546-84ba-7321134b0ce0">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/fe45e3b0-bc7b-4247-8a14-d71a74fd1dae">
     <img alt="Rule 3 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/fe45e3b0-bc7b-4247-8a14-d71a74fd1dae" width="800">
   </picture>
 </p>
@@ -65,7 +62,6 @@ For Cluster-to-Virtual-Machine traffic, SNAT rule 3 is applied, the Virtual Mach
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/9aeb12f6-60da-471e-9ab4-66d3cc2666e7">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/b31b002c-d570-4758-90f6-8a51def9105d">
     <img alt="Rule 3 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/b31b002c-d570-4758-90f6-8a51def9105d" width="700">
   </picture>
 </p>
