@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="en">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="google-site-verification" content="JeWlKxAawgJGz33wLuQ1gqTnXignb8IyWaYOe4ovFoI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/sachua/sachua.github.io/main/lightning.svg">
+    <script>
+        if(localStorage.getItem("meek_theme")==null){}
+        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
+        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    </script>
+    
+<meta name="description" content="Inconsistent Networking Behaviour between Tanzu Kubernetes Clusters">
+<title>Inconsistent Networking Behaviour between Tanzu Kubernetes Clusters</title>
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Inconsistent Networking Behaviour between Tanzu Kubernetes Clusters</h1>
+<div class="title-right">
+
+    <a href="http://sachua.github.io"><button id="buttonHome" class="btn btn-invisible circle" title="home">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
+        </svg>
+    </button></a>
+
+    <a href="https://github.com/sachua/sachua.github.io/issues/5" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+        </svg>
+    </button></a>
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="switch theme">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+<p>When working with vSphere with Tanzu on NSX-T, the cluster-to-cluster communication between Tanzu Kubernetes Clusters on the same vSphere Workload Management Cluster was observed to deviate from other combinations of communication.</p>
+<p>This means that we cannot use the Tanzu Supervisor Namespace Egress IP as the source IP when we create Gateway Firewall rules to allow cluster-to-cluster communication.</p>
+<p>This is due to the default NAT rules that NSX-T creates when a new Supervisor Namespace is created:</p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <img alt="NSX-T NAT Rules" src="https://github.com/sachua/sachua.github.io/assets/41395198/aef1aaa7-219d-486b-ae25-ea1f73bcc490" width="1000">
+  </picture></themed-picture>
+</p>
+<p>A quick look at the 3 NAT rules set:</p>
+<ol>
+<li>
+<p><strong>No SNAT for traffic going from Node IPs (10.222.0.0/16) to Ingress IPs (10.223.112.0/20)</strong></p>
+<ul>
+<li>No SNAT is applied to any traffic going from Cluster A to Cluster B</li>
+</ul>
+</li>
+<li>
+<p><strong>No SNAT for traffic going from Node IPs (10.222.0.0/16) to Node IPs (10.222.0.0/16)</strong></p>
+<ul>
+<li>No SNAT is applied to any traffic going from Node A to Node B</li>
+</ul>
+</li>
+<li>
+<p><strong>SNAT for all other traffic, translated to the Tanzu Supervisor Namespace Egress IP (10.223.136.18)</strong></p>
+<ul>
+<li>SNAT is applied to any other traffic, such as from Cluster A to another Virtual Machine in another segment, and egress the Tanzu Supervisor Namespace segment through the Tanzu Supervisor Namespace Egress IP</li>
+</ul>
+</li>
+</ol>
+<h2>What does this mean?</h2>
+<p><strong>Rule 1:</strong></p>
+<p align="center">
+<themed-picture data-catalyst-inline="true"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/57b57f99-1da9-4a0a-9430-3986f0e30c00">
+  <img alt="Rule 1 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/0c048f66-4e49-4d6c-9865-af9d66108a48" width="1000">
+</picture></themed-picture>
+</p>
+<p>For Cluster-to-Cluster traffic, SNAT rule 1 is applied, Cluster B will see the incoming traffic IP address as the Node IP of Cluster A</p>
+<p><strong>Rule 2:</strong></p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/897e4a6d-b4bd-40f4-9b34-2cc910d19a35">
+    <img alt="Rule 2 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/527e70b3-0586-4bc8-8408-53750e2b1272" width="350">
+  </picture></themed-picture>
+</p>
+<p>For traffic within the Cluster, SNAT rule 2 is applied, Nodes within Cluster A will see each other's IP address. This is working as intended.</p>
+<p><strong>Rule 3:</strong></p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/ea16758c-a8c7-4546-84ba-7321134b0ce0">
+    <img alt="Rule 3 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/fe45e3b0-bc7b-4247-8a14-d71a74fd1dae" width="800">
+  </picture></themed-picture>
+</p>
+<p>For Cluster-to-Virtual-Machine traffic, SNAT rule 3 is applied, the Virtual Machine will see the incoming traffic IP address as the Tanzu Supervisor Namespace Egress IP which Cluster A resides in. This is working as intended.</p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sachua/sachua.github.io/assets/41395198/9aeb12f6-60da-471e-9ab4-66d3cc2666e7">
+    <img alt="Rule 3 illustration" src="https://github.com/sachua/sachua.github.io/assets/41395198/b31b002c-d570-4758-90f6-8a51def9105d" width="700">
+  </picture></themed-picture>
+</p>
+<p>In fact, for network traffic that leaves the T0 Gateway to an external Kubernetes cluster, the external Kubernetes cluster will also see the incoming traffic IP address as the Tanzu Supervisor Namespace Egress IP which Cluster A resides in. This is also working as intended.</p>
+<h2>Hypothesis</h2>
+<p>Because of the implementation of vSphere Pods, where the Tanzu Supervisor Namespaces are treated as Kubernetes namespaces, and vSphere Pods are treated as Kubernetes pods, the network communication between Kubernetes pods in different namespaces should show the internal IP addresses and not the Tanzu Supervisor Namespace egress IP. In this implementation, SNAT Rule 1 is valid.</p>
+<p>The problem happens when SNAT Rule 1 is retained in NSX-T even after the Tanzu Kubernetes Cluster deployment model was selected, where the Tanzu Kubernetes Cluster nodes should not exist in the same segment as other Tanzu Kubernetes Cluster nodes when they exist in different Tanzu Supervisor Namespaces.</p>
+<h2>Workaround</h2>
+<p>Since we cannot use the Tanzu Supervisor Namespace Egress IP as the source, we need to find a way to obtain the IP address of the Cluster Nodes.</p>
+<p>If we do some exploring, we observe there are some default NSX-T Distributed Firewall rules that are created whenever a new Supervisor Namespace is created to allow intra-cluster communication by default.</p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <img alt="Auto-generated security group in NSX-T Distributed Firewall for Supervisor Namespace" src="https://github.com/sachua/sachua.github.io/assets/41395198/74241e7d-d9ac-4545-b74c-9b1d5a6a2759" width="1000">
+  </picture></themed-picture>
+</p>
+<p>These rules are applied to 2 security groups, by clicking the security groups, we can see that one of the security groups contain all Cluster Nodes that exist within the Tanzu Supervisor Namespace.</p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <img alt="Members in auto-generated security group" src="https://github.com/sachua/sachua.github.io/assets/41395198/6d197148-f4ad-4899-9f96-2c087a4143af" width="500">
+  </picture></themed-picture>
+</p>
+<p>We can then select this security group as our source when creating Gateway Firewall rules, and the network communication will work as desired.</p>
+<p>The downside is this solution does not have the ability to set fine-grained rules for Tanzu Kubernetes Clusters that exist in the same Tanzu Supervisor Namespace, as the security group contains everything.</p>
+<p>This means for Cluster A and Cluster B, both existing in the same Tanzu Supervisor Namespace, we cannot allow traffic from Cluster A but deny traffic from Cluster B.</p>
+</div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">comments</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://sachua.github.io"> Chua Song Ann </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"run "+diffDay+" days"+" • ";}
+    else{document.getElementById("runday").innerHTML="run "+diffDay+" days"+" • ";}
+}
+</script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6e5f9312111a41788a6b0fc8b4b7d6e5"}'></script><!-- End Cloudflare Web Analytics -->
+</div>
+</body>
+<script>
+var IconList={'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z', 'pinned': 'M17.14 6.51c-.21.16-.41.31-.6.44s-.39.24-.6.32-.42.14-.64.17-.47.02-.75 0c-.19-.02-.37-.06-.54-.12l-3.56 2.78c.05.22.07.45.08.67s0 .45-.03.68c-.05.36-.12.69-.23.98s-.25.55-.41.8-.36.47-.59.68-.48.43-.75.65l-2.81-3.64-4.51 3.46-1.18.23.52-1.09 4.52-3.45-2.81-3.64c.28-.22.54-.41.8-.57s.53-.3.8-.4.57-.17.87-.21c.3-.04.64-.04 1.01.02.22.03.44.07.66.13s.43.14.63.24l3.56-2.78c-.01-.18 0-.36.02-.55.03-.27.09-.52.18-.73s.19-.41.33-.59.29-.35.45-.5.36-.31.58-.48l5.03 6.51z', 'link': 'm7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z', 'about': 'M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z', 'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z', 'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z', 'upload': 'M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z'};
+var utterancesLoad=0;
+if(localStorage.getItem("meek_theme")==null){
+    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+    if (systemSettingDark.matches) {
+        localStorage.setItem("meek_theme", "dark"); changeDark();
+    }
+    else {
+        localStorage.setItem("meek_theme", "light"); changeLight();
+    }
+}
+else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
+else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
+
+function changeDark(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
+    updateSourceMedia("dark");
+    if(utterancesLoad==1){utterancesTheme("dark-blue");}
+}
+function changeLight(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
+    updateSourceMedia("light");
+    if(utterancesLoad==1){utterancesTheme("github-light");}
+}
+function modeSwitch(){
+    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
+    else{changeLight();localStorage.setItem("meek_theme","light");}
+}
+function utterancesTheme(theme){
+    const message = {type: 'set-theme',theme: theme};
+    const iframe = document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+}
+
+function updateSourceMedia(theme) {
+    const pictures = document.querySelectorAll('picture')
+    pictures.forEach((picture) => {
+        const sources = picture.querySelectorAll(`
+            source[media*="prefers-color-scheme"],
+            source[data-media*="prefers-color-scheme"]
+            `)
+        sources.forEach((source) => {
+            if (source?.media.includes('prefers-color-scheme')) {
+                source.dataset.media = source.media
+            }
+        if (source?.dataset.media.includes(theme)) {
+            source.media = 'all'
+        } else if (source) {
+            source.media = 'none'
+        }
+        })
+    })
+}
+
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+</script>
+
+<script>
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","sachua/sachua.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+</script>
+
+
+
+
+</html>
