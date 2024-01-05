@@ -99,3 +99,5 @@ We can then select this security group as our source when creating Gateway Firew
 The downside is this solution does not have the ability to set fine-grained rules for Tanzu Kubernetes Clusters that exist in the same Tanzu Supervisor Namespace, as the security group contains everything.
 
 This means for Cluster A and Cluster B, both existing in the same Tanzu Supervisor Namespace, we cannot allow traffic from Cluster A but deny traffic from Cluster B.
+
+<!-- ##{"script":"<script>localStorage.getItem("meek_theme");document.querySelectorAll('picture').forEach((picture)=>{picture.querySelectorAll(`source[media*="prefers-color-scheme"],source[data-media*="prefers-color-scheme"]`).forEach((source)=>{if(source?.media.includes('prefers-color-scheme')){source.dataset.media = source.media;}if(source?.dataset.media.includes(colorPreference)){source.media='all';}else if(source){source.media='none';}})})</script>"}## -->
