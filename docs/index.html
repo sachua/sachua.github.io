@@ -177,20 +177,21 @@ function utterancesTheme(theme){
 }
 
 function updateSourceMedia(theme) {
-const pictures = document.querySelectorAll('picture')
-for (var picture=0, total=pictures.length; picture < total; ++picture) {
-    const sources = picture.querySelectorAll(`
-        source[media*="prefers-color-scheme"],
-        source[data-media*="prefers-color-scheme"]
-        `)
-    for (var source=0, total=sources.length; source < total; ++source) {
-        if (source?.media.includes('prefers-color-scheme')) {
-            source.dataset.media = source.media
-        }
-        if (source?.dataset.media.includes(theme)) {
-            source.media = 'all'
-        } else if (source) {
-            source.media = 'none'
+    const pictures = document.querySelectorAll('picture')
+    for (var picture=0, total=pictures.length; picture < total; ++picture) {
+        const sources = picture.querySelectorAll(`
+            source[media*="prefers-color-scheme"],
+            source[data-media*="prefers-color-scheme"]
+            `)
+        for (var source=0, total=sources.length; source < total; ++source) {
+            if (source?.media.includes('prefers-color-scheme')) {
+                source.dataset.media = source.media
+            }
+            if (source?.dataset.media.includes(theme)) {
+                source.media = 'all'
+            } else if (source) {
+                source.media = 'none'
+            }
         }
     }
 }
