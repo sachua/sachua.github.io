@@ -100,4 +100,4 @@ The downside is this solution does not have the ability to set fine-grained rule
 
 This means for Cluster A and Cluster B, both existing in the same Tanzu Supervisor Namespace, we cannot allow traffic from Cluster A but deny traffic from Cluster B.
 
-<!-- ##{"timestamp":1704440241,"script":"<script async src='./updateSourceMedia.js'></script>"}## -->
+<!-- ##{"timestamp":1704440241,"script":"<script async src='https://cdn.jsdelivr.net/gh/sachua/sachua.github.io@main/updateSourceMedia.js'></script>"}## -->
