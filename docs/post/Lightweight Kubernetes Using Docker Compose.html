@@ -272,12 +272,12 @@ function utterancesTheme(theme){
 
 function updateSourceMedia(theme) {
     const pictures = document.querySelectorAll('picture')
-    for (var picture=0, total=pictures.length; picture < total; ++picture) {
+    pictures.forEach((picture) => {
         const sources = picture.querySelectorAll(`
             source[media*="prefers-color-scheme"],
             source[data-media*="prefers-color-scheme"]
             `)
-        for (var source=0, total=sources.length; source < total; ++source) {
+        sources.forEach((source) => {
             if (source?.media.includes('prefers-color-scheme')) {
                 source.dataset.media = source.media
             }
@@ -286,8 +286,8 @@ function updateSourceMedia(theme) {
             } else if (source) {
                 source.media = 'none'
             }
-        }
-    }
+        })
+    })
 }
 
 console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
