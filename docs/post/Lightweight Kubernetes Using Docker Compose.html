@@ -182,7 +182,7 @@ k get pods -A
 <div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p rke2_data/kubeconfig
 docker compose up -d</pre></div>
 <p>Finally, alias your kubectl to use your RKE2 kubeconfig, and you can start interacting with your RKE2 Kubernetes cluster!<br>
-<em>RKE2 might take awhile more as it is more resource intensive than K3s</em></p>
+<em>RKE2 might take longer to load as it is more resource intensive than K3s</em></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">alias</span> k=<span class="pl-s"><span class="pl-pds">'</span>kubectl --kubeconfig <span class="pl-pds">'</span></span><span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${PWD}</span><span class="pl-pds">"</span></span><span class="pl-s"><span class="pl-pds">'</span>/rke2_data/kubeconfig/kubeconfig.yaml<span class="pl-pds">'</span></span>
 k get pods -A
 
