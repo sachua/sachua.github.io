@@ -141,7 +141,7 @@ docker compose up -d
 ```
 
 Finally, alias your kubectl to use your RKE2 kubeconfig, and you can start interacting with your RKE2 Kubernetes cluster!
-_RKE2 might take longer to load as it is more resource intensive than K3s_
+_RKE2 might take longer to load as it has more initial set-up tasks than K3s_
 
 ```bash
 alias k='kubectl --kubeconfig '"${PWD}"'/rke2_data/kubeconfig/kubeconfig.yaml'
