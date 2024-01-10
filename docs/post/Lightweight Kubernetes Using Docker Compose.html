@@ -135,7 +135,7 @@ k get pods -A
 <span class="pl-c"><span class="pl-c">#</span> kube-system   svclb-traefik-pxlgs                       2/2     Running     0          3m51s</span>
 <span class="pl-c"><span class="pl-c">#</span> kube-system   traefik-7cd4fcff68-lbg4m                  1/1     Running     0          3m51s</span></pre></div>
 <h2>RKE2 in Docker</h2>
-<p>RKE2 is slightly more complicated as there isn't a readily available <code class="notranslate">Dockerfile</code>. We will have to build our own container image and publish it to our container registry of choice.</p>
+<p>RKE2 is slightly more complicated as there isn't a readily available container image. We will have to build our own container image and publish it to our container registry of choice.</p>
 <p>The Dockerfile can be found <a href="https://github.com/rancher/rke2/blob/master/Dockerfile">here</a>. Alternatively, I have already built the container image and you can copy my image.</p>
 <p>Once again, the <code class="notranslate">docker-compose.yml</code> file:</p>
 <div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.7<span class="pl-pds">'</span></span>
