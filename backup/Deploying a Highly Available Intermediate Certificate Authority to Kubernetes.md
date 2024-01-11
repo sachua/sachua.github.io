@@ -20,6 +20,12 @@ To start the entire deployment, let's create the `stepca` Kubernetes namespace w
 kubectl create ns stepca
 ```
 
+Sign a leaf TLS cert for the domain where you will be hosting your Step CA. We can inject the TLS secret as follows:
+
+```bash
+kubectl create secret tls stepca-tls -n stepca --key private.key --cert public.crt
+```
+
 Download the `step` binary [here](https://github.com/smallstep/cli/releases) and place the binary in `/usr/bin`
 
 Then generate an intermediate certificate signing request:
@@ -575,4 +581,16 @@ spec:
     kind: Deployment
     name: stepca
   targetCPUUtilizationPercentage: 80
+```
+
+You check the health of your Intermediate Certificate Authority:
+
+```bash
+curl https://ca.domain.org/health
+
+# {"status":"ok"}
+
+curl https://ca.domain.org/acme/acme/directory
+
+# {"newNonce":"https://ca.domain.org/acme/acme/new-nonce","newAccount":"https://ca.domain.org/acme/acme/new-account","newOrder":"https://ca.domain.org/acme/acme/new-order","revokeCert":"https://ca.domain.org/acme/acme/revoke-cert","keyChange":"https://ca.domain.org/acme/acme/key-change"}
 ```

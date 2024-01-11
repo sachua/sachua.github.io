@@ -82,6 +82,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h2>Preparation</h2>
 <p>To start the entire deployment, let's create the <code class="notranslate">stepca</code> Kubernetes namespace where everything will be deployed to:</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create ns stepca</pre></div>
+<p>Sign a leaf TLS cert for the domain where you will be hosting your Step CA. We can inject the TLS secret as follows:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create secret tls stepca-tls -n stepca --key private.key --cert public.crt</pre></div>
 <p>Download the <code class="notranslate">step</code> binary <a href="https://github.com/smallstep/cli/releases">here</a> and place the binary in <code class="notranslate">/usr/bin</code></p>
 <p>Then generate an intermediate certificate signing request:</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">step certificate create <span class="pl-s"><span class="pl-pds">"</span>Intermediate CA Name<span class="pl-pds">"</span></span> intermediate.csr intermediate_ca_key --csr</pre></div>
@@ -629,6 +631,14 @@ The <code class="notranslate">deployment.yaml</code> is as follows:</p>
     <span class="pl-ent">kind</span>: <span class="pl-s">Deployment</span>
     <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
   <span class="pl-ent">targetCPUUtilizationPercentage</span>: <span class="pl-c1">80</span></pre></div>
+<p>You check the health of your Intermediate Certificate Authority:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">curl https://ca.domain.org/health
+
+<span class="pl-c"><span class="pl-c">#</span> {"status":"ok"}</span>
+
+curl https://ca.domain.org/acme/acme/directory
+
+<span class="pl-c"><span class="pl-c">#</span> {"newNonce":"https://ca.domain.org/acme/acme/new-nonce","newAccount":"https://ca.domain.org/acme/acme/new-account","newOrder":"https://ca.domain.org/acme/acme/new-order","revokeCert":"https://ca.domain.org/acme/acme/revoke-cert","keyChange":"https://ca.domain.org/acme/acme/key-change"}</span></pre></div>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">Comments</button>
 <div class="comments" id="comments"></div>
