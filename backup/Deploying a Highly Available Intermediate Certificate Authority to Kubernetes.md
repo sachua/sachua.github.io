@@ -6,7 +6,11 @@ In this post we will walk though the process of deploying a PostgreSQL cluster o
 
 Here is how the final architecture will look like:
 
-![Architecture](https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53)
+<p align="center">
+  <picture>
+    <img alt="Architecture" src="https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53" width="1000">
+  </picture>
+</p>
 
 ## Preparation
 

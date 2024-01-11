@@ -74,7 +74,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>Step CA can help you generate TLS certificates for your sites using the ACME protocol, and automate the TLS certificate renewal process as well.</p>
 <p>In this post we will walk though the process of deploying a PostgreSQL cluster on Kubernetes, then deploying a Step CA Intermediate Certificate Authority that will use the PostgreSQL cluster as the database.</p>
 <p>Here is how the final architecture will look like:</p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53"><img src="https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53" alt="Architecture" style="max-width: 100%;"></a></p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <img alt="Architecture" src="https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53" width="1000">
+  </picture></themed-picture>
+</p>
 <h2>Preparation</h2>
 <p>To start the entire deployment, let's create the <code class="notranslate">stepca</code> Kubernetes namespace where everything will be deployed to:</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create ns stepca</pre></div>
