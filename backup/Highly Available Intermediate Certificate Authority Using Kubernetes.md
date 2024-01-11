@@ -37,7 +37,7 @@ step certificate create "Intermediate CA Name" intermediate.csr intermediate_ca_
 Transfer the certificate signing request to your existing root CA and get it signed. You should have the `root_ca.crt` from your existing root CA, `intermediate_ca.crt` from signing the certificate signing request, and `intermediate_ca.key` that was created when you generated the intermediate certificate signing request from the previous step.
 
 ## Deploying a PostgreSQL Cluster
-There are many available PostgreSQL Operators that can help you lifecycle a highly available PostgreSQL cluster. In this example, we will be using CloudNativePG. I like CloudNativePG because the operator creates the database instances using `Pods` instead of `ReplicaSets` or `StatefulSets`, which avoids all the limitations that comes with `ReplicaSets` or `StatefulSets`.
+There are many available PostgreSQL Operators that can help you lifecycle a highly available PostgreSQL cluster. In this example, we will be using CloudNativePG. I like CloudNativePG because the operator creates the database instances using `Pods` instead of `StatefulSets`, which avoids all the limitations that comes with `StatefulSets`.
 
 To install the CloudNativePG Operator, run the following command:
 
