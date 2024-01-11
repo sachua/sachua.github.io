@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="en">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="google-site-verification" content="JeWlKxAawgJGz33wLuQ1gqTnXignb8IyWaYOe4ovFoI" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/sachua/sachua.github.io/main/lightning.svg">
+    <script>
+        if(localStorage.getItem("meek_theme")==null){}
+        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
+        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    </script>
+    
+<meta name="description" content="Highly Available Intermediate Certificate Authority Using Kubernetes">
+<title>Highly Available Intermediate Certificate Authority Using Kubernetes</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Highly Available Intermediate Certificate Authority Using Kubernetes</h1>
+<div class="title-right">
+
+    <a href="http://sachua.github.io" aria-label="Home"><button id="buttonHome" class="btn btn-invisible circle" title="Home">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
+        </svg>
+    </button></a>
+
+    <a href="https://github.com/sachua/sachua.github.io/issues/6" aria-label="Post in GitHub Issues" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+        </svg>
+    </button></a>
+
+    <button id="themeButton" class="btn btn-invisible circle" onclick="modeSwitch();" title="Switch Theme">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+<p>In our own private infrastructure environment, we often need to use our own self-signed TLS certificates to serve our sites over HTTPS.</p>
+<p>Step CA can help you generate TLS certificates for your sites using the ACME protocol, and automate the TLS certificate renewal process as well.</p>
+<p>In this post we will walk though the process of deploying a PostgreSQL cluster on Kubernetes, then deploying a Step CA Intermediate Certificate Authority that will use the PostgreSQL cluster as the database.</p>
+<p>Here is how the final architecture will look like:</p>
+<p align="center">
+  <themed-picture data-catalyst-inline="true"><picture>
+    <img alt="Architecture" src="https://github.com/sachua/sachua.github.io/assets/41395198/a6b970dd-d7ca-4228-8f10-d324b715ff53" width="1000">
+  </picture></themed-picture>
+</p>
+<h2>Preparation</h2>
+<p>To start the entire deployment, let's create the <code class="notranslate">stepca</code> Kubernetes namespace where everything will be deployed to:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create ns stepca</pre></div>
+<p>Sign a leaf TLS cert for the domain where you will be hosting your Step CA. We can inject the TLS secret as follows:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create secret tls stepca-tls -n stepca --key private.key --cert public.crt</pre></div>
+<p>Download the <code class="notranslate">step</code> binary <a href="https://github.com/smallstep/cli/releases">here</a> and place the binary in <code class="notranslate">/usr/bin</code></p>
+<p>Then generate an intermediate certificate signing request:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">step certificate create <span class="pl-s"><span class="pl-pds">"</span>Intermediate CA Name<span class="pl-pds">"</span></span> intermediate.csr intermediate_ca_key --csr</pre></div>
+<p>Transfer the certificate signing request to your existing root CA and get it signed. You should have the <code class="notranslate">root_ca.crt</code> from your existing root CA, <code class="notranslate">intermediate_ca.crt</code> from signing the certificate signing request, and <code class="notranslate">intermediate_ca.key</code> that was created when you generated the intermediate certificate signing request from the previous step.</p>
+<h2>Deploying a PostgreSQL Cluster</h2>
+<p>There are many available PostgreSQL Operators that can help you lifecycle a highly available PostgreSQL cluster. In this example, we will be using CloudNativePG. I like CloudNativePG because the operator creates the database instances using <code class="notranslate">Pods</code> instead of <code class="notranslate">ReplicaSets</code> or <code class="notranslate">StatefulSets</code>, which avoids all the limitations that comes with <code class="notranslate">ReplicaSets</code> or <code class="notranslate">StatefulSets</code>.</p>
+<p>To install the CloudNativePG Operator, run the following command:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl apply -f <span class="pl-cce">\ </span>https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.22/releases/cnpg-1.22.0.yaml</pre></div>
+<p>You can verify the Operator is installed with:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl get deployment -n cnpg-system cnpg-controller-manager</pre></div>
+<p>Here is the YAML deployment file to create the Postgres Cluster. In this example we will be storing our postgres backups to our own MinIO instance hosted at <code class="notranslate">minio.domain.org</code></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Inject MinIO Credentials as Secret</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Secret</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">type</span>: <span class="pl-s">Opaque</span>
+<span class="pl-ent">stringData</span>:
+  <span class="pl-ent">ACCESS_KEY_ID</span>: <span class="pl-s">minio </span><span class="pl-c"><span class="pl-c">#</span> S3 username</span>
+  <span class="pl-ent">ACCESS_SECRET_KEY</span>: <span class="pl-s">minio123 </span><span class="pl-c"><span class="pl-c">#</span> S3 password</span>
+---
+<span class="pl-c"><span class="pl-c">#</span> Step CA Deployment YAML</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">postgresql.cnpg.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Cluster</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca-postgres</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">imageName</span>: <span class="pl-s">ghcr.io/cloudnative-pg/postgresql:15.0</span>
+  <span class="pl-ent">instances</span>: <span class="pl-c1">3</span>
+  <span class="pl-ent">primaryUpdateStrategy</span>: <span class="pl-s">unsupervised </span><span class="pl-c"><span class="pl-c">#</span> Rolling update process to be automated and managed by Kubernetes</span>
+  <span class="pl-ent">monitoring</span>:
+    <span class="pl-ent">enablePodMonitor</span>: <span class="pl-s">true </span><span class="pl-c"><span class="pl-c">#</span> Expose prometheus metrics</span>
+  <span class="pl-ent">storage</span>:
+    <span class="pl-ent">storageClass</span>: <span class="pl-s">vsan-default-storage-policy </span><span class="pl-c"><span class="pl-c">#</span> Define the storage class you use in your Kubernetes cluster</span>
+    <span class="pl-ent">size</span>: <span class="pl-s">1Gi</span>
+  <span class="pl-ent">backup</span>:
+    <span class="pl-c"><span class="pl-c">#</span> Configure to use S3 to store backup resources</span>
+    <span class="pl-ent">barmanObjectStore</span>:
+      <span class="pl-ent">destinationPath</span>: <span class="pl-s">s3://stepca/ </span><span class="pl-c"><span class="pl-c">#</span> S3 bucket location</span>
+      <span class="pl-ent">endpointURL</span>: <span class="pl-s">https://minio.domain.org </span><span class="pl-c"><span class="pl-c">#</span> S3 endpoint</span>
+      <span class="pl-ent">s3Credentials</span>:
+        <span class="pl-ent">accessKeyId</span>:
+          <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+          <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_KEY_ID</span>
+        <span class="pl-ent">secretAccessKey</span>:
+          <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+          <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_SECRET_KEY</span>
+      <span class="pl-ent">wal</span>:
+        <span class="pl-ent">compression</span>: <span class="pl-s">gzip</span>
+        <span class="pl-ent">encryption</span>: <span class="pl-s">AES256</span>
+      <span class="pl-ent">retentionPolicy</span>: <span class="pl-s"><span class="pl-pds">"</span>7d<span class="pl-pds">"</span></span>    </pre></div>
+<p>You should see the following Kubernetes resources once your PostgreSQL cluster is created:</p>
+<p>Services:</p>
+<ul>
+<li>stepca-postgres-r
+<ul>
+<li>applications to connect to any of the instances for read-only workloads</li>
+</ul>
+</li>
+<li>stepca-postgres-ro
+<ul>
+<li>applications to connect to any of the hot standby, non-primary replicas for read-only workloads</li>
+</ul>
+</li>
+<li>stepca-postgres-rw
+<ul>
+<li>applications to connect to the primary instance for read-write workloads</li>
+</ul>
+</li>
+</ul>
+<p>Secrets:</p>
+<ul>
+<li>stepca-postgres-app
+<ul>
+<li>database credentials for the default user called <code class="notranslate">app</code>, corresponds to the user owning the database</li>
+</ul>
+</li>
+<li>stepca-postgres-ca
+<ul>
+<li>self-signed CA generated and used to support TLS within the postgres cluster</li>
+</ul>
+</li>
+<li>stepca-postgres-replication
+<ul>
+<li>streaming replication client certificate generated by the client CA</li>
+</ul>
+</li>
+<li>stepca-postgres-server
+<ul>
+<li>server TLS certificate signed by the server CA</li>
+</ul>
+</li>
+<li>stepca-postgres-superuser
+<ul>
+<li>superuser credentials to be used only for administrative purposes, corresponds to the <code class="notranslate">postgres</code> user</li>
+</ul>
+</li>
+<li>stepca-postgres-token
+<ul>
+<li>kubernetes service account created for the database operator</li>
+</ul>
+</li>
+</ul>
+<p>Monitoring:</p>
+<ul>
+<li>When enablePodMonitor is set to <code class="notranslate">true</code>, CloudNativePG will automatically expose prometheus metrics relating to CloudNativePG clusters, and create a <code class="notranslate">PodMonitor</code> resource for your prometheus to scrape the endpoint
+<ul>
+<li>The pre-requisite is that you must have prometheus already installed</li>
+</ul>
+</li>
+</ul>
+<h3>PostgreSQL Backups</h3>
+<p>For on-demand backups, apply the following <code class="notranslate">YAML</code>:</p>
+<pre class="notranslate"><code class="notranslate">apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: backup-example
+spec:
+  cluster:
+    name: stepca-postgres
+</code></pre>
+<p>To schedule backups, apply the following <code class="notranslate">YAML</code>:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">apiVersion</span>: <span class="pl-s">postgresql.cnpg.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">ScheduledBackup</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">backup-daily-midnight</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">schedule</span>: <span class="pl-s"><span class="pl-pds">"</span>0 0 16 * * *<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> 0000 SGT in UTC time</span>
+  <span class="pl-ent">backupOwnerReference</span>: <span class="pl-s">self</span>
+  <span class="pl-ent">cluster</span>:
+    <span class="pl-ent">name</span>: <span class="pl-s">stepca-postgres</span></pre></div>
+<p>To restore backup from S3 object store, apply the following <code class="notranslate">YAML</code>:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">apiVersion</span>: <span class="pl-s">postgresql.cnpg.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Cluster</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca-postgres</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">imageName</span>: <span class="pl-s">ghcr.io/cloudnative-pg/postgresql:15.0</span>
+  <span class="pl-ent">instances</span>: <span class="pl-c1">3</span>
+  <span class="pl-ent">primaryUpdateStrategy</span>: <span class="pl-s">unsupervised </span><span class="pl-c"><span class="pl-c">#</span> Rolling update process to be automated and managed by Kubernetes</span>
+  <span class="pl-ent">monitoring</span>:
+    <span class="pl-ent">enablePodMonitor</span>: <span class="pl-s">true </span><span class="pl-c"><span class="pl-c">#</span> Expose prometheus metrics</span>
+  <span class="pl-ent">storage</span>:
+    <span class="pl-ent">storageClass</span>: <span class="pl-s">vsan-default-storage-policy </span><span class="pl-c"><span class="pl-c">#</span> Define the storage class you use in your Kubernetes cluster</span>
+    <span class="pl-ent">size</span>: <span class="pl-s">1Gi</span>
+  <span class="pl-ent">backup</span>:
+    <span class="pl-c"><span class="pl-c">#</span> Configure to use S3 to store backup resources</span>
+    <span class="pl-ent">barmanObjectStore</span>:
+      <span class="pl-ent">destinationPath</span>: <span class="pl-s">s3://stepca/ </span><span class="pl-c"><span class="pl-c">#</span> S3 bucket location</span>
+      <span class="pl-ent">endpointURL</span>: <span class="pl-s">https://minio.domain.org </span><span class="pl-c"><span class="pl-c">#</span> S3 endpoint</span>
+      <span class="pl-ent">s3Credentials</span>:
+        <span class="pl-ent">accessKeyId</span>:
+          <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+          <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_KEY_ID</span>
+        <span class="pl-ent">secretAccessKey</span>:
+          <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+          <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_SECRET_KEY</span>
+      <span class="pl-ent">wal</span>:
+        <span class="pl-ent">compression</span>: <span class="pl-s">gzip</span>
+        <span class="pl-ent">encryption</span>: <span class="pl-s">AES256</span>
+      <span class="pl-ent">retentionPolicy</span>: <span class="pl-s"><span class="pl-pds">"</span>7d<span class="pl-pds">"</span></span>
+  <span class="pl-ent">bootstrap</span>:
+    <span class="pl-ent">recovery</span>:
+      <span class="pl-ent">source</span>: <span class="pl-s">stepca-postgres</span>
+      <span class="pl-ent">recoveryTarget</span>:
+        <span class="pl-c"><span class="pl-c">#</span> Use backupID and targetImmediate to backup to that instant and stop immediately, or use targetTime to do point-in-time recovery where the database will run through the WAL to the timestamp specified after restoring from the nearest base backup</span>
+        <span class="pl-ent">backupID</span>: <span class="pl-c1">20240102T160000</span>
+        <span class="pl-ent">targetTime</span>: <span class="pl-s"><span class="pl-pds">"</span>2024-01-02T09:00:25<span class="pl-pds">"</span></span>
+  <span class="pl-ent">externalClusters</span>:
+    - <span class="pl-ent">name</span>: <span class="pl-s">stepca-postgres </span><span class="pl-c"><span class="pl-c">#</span> Name has to be same as the previous cluster since barman will be searching for backups based on the name</span>
+      <span class="pl-ent">barmanObjectStore</span>:
+        <span class="pl-ent">destinationPath</span>: <span class="pl-s">s3://stepca/</span>
+        <span class="pl-ent">endpointURL</span>: <span class="pl-s">https://minio.domain.org </span><span class="pl-c"><span class="pl-c">#</span> S3 endpoint</span>
+        <span class="pl-ent">s3Credentials</span>:
+          <span class="pl-ent">accessKeyId</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+            <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_KEY_ID</span>
+          <span class="pl-ent">secretAccessKey</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">minio</span>
+            <span class="pl-ent">key</span>: <span class="pl-s">ACCESS_SECRET_KEY</span>
+          <span class="pl-ent">wal</span>:
+            <span class="pl-ent">maxParallel</span>: <span class="pl-c1">8</span> <span class="pl-c"><span class="pl-c">#</span> Take advantage of the parallel WAL restore feature to dedicate up to 8 concurrent jobs to fetch required WAL files from the archive</span></pre></div>
+<h2>Deploying Step CA</h2>
+<p>Step CA includes a helm chart to deploy on Kubernetes, but there is a disclaimer that they can only support 1 replica instance. Therefore we will not be using their helm chart, and instead we take the following deployment path:</p>
+<ol>
+<li>Run a Step CA on Docker</li>
+<li>Retrieve the configuration template to use in our actual deployment</li>
+<li>Deploy our Step CA with our specified configuration injected as a Kubernetes secret</li>
+</ol>
+<p>To run Step CA on Docker, we can use the following <code class="notranslate">docker-compose.yml</code> file:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.3<span class="pl-pds">'</span></span>
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">ca</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">smallstep/step-ca:0.24.1</span>
+    <span class="pl-ent">networks</span>:
+      - <span class="pl-s">default</span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>9000:9000<span class="pl-pds">"</span></span>
+    <span class="pl-ent">environment</span>:
+      - <span class="pl-s">DOCKER_STEPCA_INIT_NAME=${DOCKER_STEPCA_INIT_NAME} </span><span class="pl-c"><span class="pl-c">#</span> Name of your CA - this will be the issuer of your CA certificates</span>
+      - <span class="pl-s">DOCKER_STEPCA_INIT_DNS_NAMES=${DOCKER_STEPCA_INIT_DNS_NAMES} </span><span class="pl-c"><span class="pl-c">#</span> Hostname(s) or IPs that the CA will accept requests on</span>
+      - <span class="pl-s">DOCKER_STEPCA_INIT_PROVISIONER_NAME=${DOCKER_STEPCA_INIT_PROVISIONER_NAME} </span><span class="pl-c"><span class="pl-c">#</span> Label for the initial admin (JWK) provisioner. Default: "admin"</span>
+      - <span class="pl-s">DOCKER_STEPCA_INIT_PASSWORD=${DOCKER_STEPCA_INIT_PASSWORD} </span><span class="pl-c"><span class="pl-c">#</span> Password for the encrypted CA keys and the default CA provisioner</span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s">./data/home/step:/home/step</span>
+    <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
+<span class="pl-ent">networks</span>:
+  <span class="pl-ent">default</span>:
+    <span class="pl-ent">ipam</span>:
+      <span class="pl-ent">driver</span>: <span class="pl-s">default</span>
+      <span class="pl-ent">config</span>:
+        - <span class="pl-ent">subnet</span>: <span class="pl-s"><span class="pl-pds">"</span>172.97.0.0/16<span class="pl-pds">"</span></span>
+<span class="pl-ent">volumes</span>:
+  <span class="pl-ent">step_home</span>:</pre></div>
+<p>From here, we can retrieve the configuration files from <code class="notranslate">/home/step/</code>, then edit the template to use the PostgreSQL cluster that we deployed earlier. A reference of the configuration options can be found <a href="https://smallstep.com/docs/step-ca/configuration/#basic-configuration-options" rel="nofollow">here</a></p>
+<p>A customised <code class="notranslate">config/ca.json</code> is as follows:</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"root"</span>: <span class="pl-s"><span class="pl-pds">"</span>/home/step/certs/root_ca.crt<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"federatedRoots"</span>: <span class="pl-c1">null</span>,
+  <span class="pl-ent">"crt"</span>: <span class="pl-s"><span class="pl-pds">"</span>/home/step/certs/intermediate_ca.crt<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"key"</span>: <span class="pl-s"><span class="pl-pds">"</span>/home/step/certs/intermediate_ca.key<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"address"</span>: <span class="pl-s"><span class="pl-pds">"</span>9000<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"insecureAddress"</span>: <span class="pl-s"><span class="pl-pds">"</span>true<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"dnsNames"</span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>ca.domain.org<span class="pl-pds">"</span></span>
+  ],
+  <span class="pl-ent">"logger"</span>: {
+    <span class="pl-ent">"format"</span>: <span class="pl-s"><span class="pl-pds">"</span>text<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-ent">"db"</span>:{
+    <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>postgresql<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"dataSource"</span>: <span class="pl-s"><span class="pl-pds">"</span>postgresql://app:password@stepca-postgres-rw.stepca.svc.cluster.local:5432<span class="pl-pds">"</span></span>,
+    <span class="pl-ent">"database"</span>: <span class="pl-s"><span class="pl-pds">"</span>app<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-ent">"authority"</span>: {
+    <span class="pl-ent">"provisioners"</span>: [
+      {
+        <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>JWK<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"name"</span>: <span class="pl-s"><span class="pl-pds">"</span>admin<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"key"</span>: {
+          <span class="pl-ent">"use"</span>: <span class="pl-s"><span class="pl-pds">"</span>sig<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"kty"</span>: <span class="pl-s"><span class="pl-pds">"</span>EC<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"kid"</span>: <span class="pl-s"><span class="pl-pds">"</span>YYNxZ0rq0WsT2MlqLCWvgme3jszkmt99KjoGEJJwAKs<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"crv"</span>: <span class="pl-s"><span class="pl-pds">"</span>P-256<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"alg"</span>: <span class="pl-s"><span class="pl-pds">"</span>ES256<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"x"</span>: <span class="pl-s"><span class="pl-pds">"</span>LsI8nHBflc-mrCbRqhl8d3hSl5sYuSM1AbXBmRfznyg<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"y"</span>: <span class="pl-s"><span class="pl-pds">"</span>F99LoOvi7z-ZkumsgoHIhodP8q9brXe4bhF3szK-c_w<span class="pl-pds">"</span></span>
+        },
+        <span class="pl-ent">"encryptedKey"</span>: <span class="pl-s"><span class="pl-pds">"</span>eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJjdHkiOiJqd2sranNvbiIsImVuYyI6IkEyNTZHQ00iLCJwMmMiOjEwMDAwMCwicDJzIjoiVERQS2dzcEItTUR4ZDJxTGo0VlpwdyJ9.2_j0cZgTm2eFkZ-hrtr1hBIvLxN0w3TZhbX0Jrrq7vBMaywhgFcGTA.mCasZCbZJ-JT7vjA.bW052WDKSf_ueEXq1dyxLq0n3qXWRO-LXr7OzBLdUKWKSBGQrzqS5KJWqdUCPoMIHTqpwYvm-iD6uFlcxKBYxnsAG_hoq_V3icvvwNQQSd_q7Thxr2_KtPIDJWNuX1t5qXp11hkgb-8d5HO93CmN7xNDG89pzSUepT6RYXOZ483mP5fre9qzkfnrjx3oPROCnf3SnIVUvqk7fwfXuniNsg3NrNqncHYUQNReiq3e9I1R60w0ZQTvIReY7-zfiq7iPgVqmu5I7XGgFK4iBv0L7UOEora65b4hRWeLxg5t7OCfUqrS9yxAk8FdjFb9sEfjopWViPRepB0dYPH8dVI.fb6-7XWqp0j6CR9Li0NI-Q<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"claims"</span>: {
+          <span class="pl-ent">"enableSSHCA"</span>: <span class="pl-c1">false</span>,
+          <span class="pl-ent">"disableRenewal"</span>: <span class="pl-c1">false</span>,
+          <span class="pl-ent">"allowRenewalAfterExpiry"</span>: <span class="pl-c1">false</span>
+        },
+        <span class="pl-ent">"options"</span>: {
+          <span class="pl-ent">"x509"</span>: {},
+          <span class="pl-ent">"ssh"</span>: {}
+        }
+      },
+      {
+        <span class="pl-ent">"type"</span>: <span class="pl-s"><span class="pl-pds">"</span>ACME<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"name"</span>: <span class="pl-s"><span class="pl-pds">"</span>acme<span class="pl-pds">"</span></span>,
+        <span class="pl-ent">"forceCN"</span>: <span class="pl-c1">true</span>,
+        <span class="pl-ent">"claims"</span>: {
+          <span class="pl-ent">"maxTLSCertDuration"</span>: <span class="pl-s"><span class="pl-pds">"</span>2160h0m0s<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"defaultTLSCertDuration"</span>: <span class="pl-s"><span class="pl-pds">"</span>2160h0m0s<span class="pl-pds">"</span></span>,
+          <span class="pl-ent">"policy"</span>: {
+            <span class="pl-ent">"x509"</span>: {
+              <span class="pl-ent">"allow"</span>: [<span class="pl-s"><span class="pl-pds">"</span>*.domain.org<span class="pl-pds">"</span></span>]
+            }
+          }
+        },
+        <span class="pl-ent">"options"</span>: {
+          <span class="pl-ent">"x509"</span>: {
+            <span class="pl-ent">"templateFile"</span>: <span class="pl-s"><span class="pl-pds">"</span>templates/certs/x509/leaf.tpl<span class="pl-pds">"</span></span>
+          }
+        }
+      }
+    ],
+    <span class="pl-ent">"template"</span>: {},
+    <span class="pl-ent">"backdate"</span>: <span class="pl-s"><span class="pl-pds">"</span>1m0s<span class="pl-pds">"</span></span>
+  },
+  <span class="pl-ent">"tls"</span>: {
+    <span class="pl-ent">"cipherSuites"</span>: [
+      <span class="pl-s"><span class="pl-pds">"</span>TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256<span class="pl-pds">"</span></span>
+    ],
+    <span class="pl-ent">"minVersion"</span>: <span class="pl-c1">1.2</span>,
+    <span class="pl-ent">"maxVersion"</span>: <span class="pl-c1">1.3</span>,
+    <span class="pl-ent">"renegotiation"</span>: <span class="pl-c1">false</span>
+  },
+  <span class="pl-ent">"commonName"</span>: <span class="pl-s"><span class="pl-pds">"</span>Step Online CA<span class="pl-pds">"</span></span>
+}</pre></div>
+<p>This <code class="notranslate">ca.json</code> references a custom leaf cert template <code class="notranslate">leaf.tpl</code> to set Subject Alternative Name (SAN) in the provisioned TLS certificate. Check <a href="https://smallstep.com/docs/step-ca/templates/" rel="nofollow">here</a> on how to configure your own Step CA templates.</p>
+<p>The custom <code class="notranslate">leaf.tpl</code> as follows:</p>
+<pre class="notranslate"><code class="notranslate">{
+  "subject": {{ toJson .subject }},
+{{- if .Insecure.User.dnsName }}
+  "dnsNames": {{ toJSON .Insecure.User.dnsName }},
+{{- else }}
+  "sans": {{ toJson .SANs }},
+{{- end }}
+{{-if typeIs "*rsa.PublicKey" .Insecure.CR.PublicKey }}
+  "keyUsage": ["keyEncipherment", "digitalSignature"],
+{{- else }}
+  "keyUsage": ["digitalSignature"],
+{{- end }}
+  "extKeyUsage": ["serverAuth", "clientAuth]
+}
+</code></pre>
+<p>We can then create the entire deployment YAML file including the injecting of configuration as secrets, and the referencing of the secrets from the deployment resource.</p>
+<p>Our example deployment assumes an NGINX ingress controller is already deployed in the cluster.<br>
+The <code class="notranslate">deployment.yaml</code> is as follows:</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Secret</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca-config</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">type</span>: <span class="pl-s">Opaque</span>
+<span class="pl-ent">stringData</span>:
+  <span class="pl-ent">intermediate_ca_crt</span>: <span class="pl-s">|</span>
+<span class="pl-s">    &lt;YOUR INTERMEDIATE CA CRT&gt;</span>
+<span class="pl-s"></span>  <span class="pl-ent">root_ca.crt</span>: <span class="pl-s">|</span>
+<span class="pl-s">    &lt;YOUR ROOT CA CRT&gt;</span>
+<span class="pl-s"></span>  <span class="pl-ent">ca.json</span>: <span class="pl-s">|</span>
+<span class="pl-s">    {</span>
+<span class="pl-s">      "root": "/home/step/certs/root_ca.crt",</span>
+<span class="pl-s">      "federatedRoots": null,</span>
+<span class="pl-s">      "crt": "/home/step/certs/intermediate_ca.crt",</span>
+<span class="pl-s">      "key": "/home/step/certs/intermediate_ca.key",</span>
+<span class="pl-s">      "address": "9000",</span>
+<span class="pl-s">      "insecureAddress": "true",</span>
+<span class="pl-s">      "dnsNames": [</span>
+<span class="pl-s">        "localhost",</span>
+<span class="pl-s">        "ca.domain.org"</span>
+<span class="pl-s">      ],</span>
+<span class="pl-s">      "logger": {</span>
+<span class="pl-s">        "format": "text"</span>
+<span class="pl-s">      },</span>
+<span class="pl-s">      "db":{</span>
+<span class="pl-s">        "type": "postgresql",</span>
+<span class="pl-s">        "dataSource": "postgresql://app:password@stepca-postgres-rw.stepca.svc.cluster.local:5432",</span>
+<span class="pl-s">        "database": "app"</span>
+<span class="pl-s">      },</span>
+<span class="pl-s">      "authority": {</span>
+<span class="pl-s">        "provisioners": [</span>
+<span class="pl-s">          {</span>
+<span class="pl-s">            "type": "JWK",</span>
+<span class="pl-s">            "name": "admin",</span>
+<span class="pl-s">            "key": {</span>
+<span class="pl-s">              "use": "sig",</span>
+<span class="pl-s">              "kty": "EC",</span>
+<span class="pl-s">              "kid": "YYNxZ0rq0WsT2MlqLCWvgme3jszkmt99KjoGEJJwAKs",</span>
+<span class="pl-s">              "crv": "P-256",</span>
+<span class="pl-s">              "alg": "ES256",</span>
+<span class="pl-s">              "x": "LsI8nHBflc-mrCbRqhl8d3hSl5sYuSM1AbXBmRfznyg",</span>
+<span class="pl-s">              "y": "F99LoOvi7z-ZkumsgoHIhodP8q9brXe4bhF3szK-c_w"</span>
+<span class="pl-s">            },</span>
+<span class="pl-s">            "encryptedKey": "eyJhbGciOiJQQkVTMi1IUzI1NitBMTI4S1ciLCJjdHkiOiJqd2sranNvbiIsImVuYyI6IkEyNTZHQ00iLCJwMmMiOjEwMDAwMCwicDJzIjoiVERQS2dzcEItTUR4ZDJxTGo0VlpwdyJ9.2_j0cZgTm2eFkZ-hrtr1hBIvLxN0w3TZhbX0Jrrq7vBMaywhgFcGTA.mCasZCbZJ-JT7vjA.bW052WDKSf_ueEXq1dyxLq0n3qXWRO-LXr7OzBLdUKWKSBGQrzqS5KJWqdUCPoMIHTqpwYvm-iD6uFlcxKBYxnsAG_hoq_V3icvvwNQQSd_q7Thxr2_KtPIDJWNuX1t5qXp11hkgb-8d5HO93CmN7xNDG89pzSUepT6RYXOZ483mP5fre9qzkfnrjx3oPROCnf3SnIVUvqk7fwfXuniNsg3NrNqncHYUQNReiq3e9I1R60w0ZQTvIReY7-zfiq7iPgVqmu5I7XGgFK4iBv0L7UOEora65b4hRWeLxg5t7OCfUqrS9yxAk8FdjFb9sEfjopWViPRepB0dYPH8dVI.fb6-7XWqp0j6CR9Li0NI-Q",</span>
+<span class="pl-s">            "claims": {</span>
+<span class="pl-s">              "enableSSHCA": false,</span>
+<span class="pl-s">              "disableRenewal": false,</span>
+<span class="pl-s">              "allowRenewalAfterExpiry": false</span>
+<span class="pl-s">            },</span>
+<span class="pl-s">            "options": {</span>
+<span class="pl-s">              "x509": {},</span>
+<span class="pl-s">              "ssh": {}</span>
+<span class="pl-s">            }</span>
+<span class="pl-s">          },</span>
+<span class="pl-s">          {</span>
+<span class="pl-s">            "type": "ACME",</span>
+<span class="pl-s">            "name": "acme",</span>
+<span class="pl-s">            "forceCN": true,</span>
+<span class="pl-s">            "claims": {</span>
+<span class="pl-s">              "maxTLSCertDuration": "2160h0m0s",</span>
+<span class="pl-s">              "defaultTLSCertDuration": "2160h0m0s",</span>
+<span class="pl-s">              "policy": {</span>
+<span class="pl-s">                "x509": {</span>
+<span class="pl-s">                  "allow": ["*.domain.org"]</span>
+<span class="pl-s">                }</span>
+<span class="pl-s">              }</span>
+<span class="pl-s">            },</span>
+<span class="pl-s">            "options": {</span>
+<span class="pl-s">              "x509": {</span>
+<span class="pl-s">                "templateFile": "templates/certs/x509/leaf.tpl"</span>
+<span class="pl-s">              }</span>
+<span class="pl-s">            }</span>
+<span class="pl-s">          }</span>
+<span class="pl-s">        ],</span>
+<span class="pl-s">        "template": {},</span>
+<span class="pl-s">        "backdate": "1m0s"</span>
+<span class="pl-s">      },</span>
+<span class="pl-s">      "tls": {</span>
+<span class="pl-s">        "cipherSuites": [</span>
+<span class="pl-s">          "TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256",</span>
+<span class="pl-s">          "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"</span>
+<span class="pl-s">        ],</span>
+<span class="pl-s">        "minVersion": 1.2,</span>
+<span class="pl-s">        "maxVersion": 1.3,</span>
+<span class="pl-s">        "renegotiation": false</span>
+<span class="pl-s">      },</span>
+<span class="pl-s">      "commonName": "Step Online CA"</span>
+<span class="pl-s">    }</span>
+<span class="pl-s"></span>  <span class="pl-ent">defaults.json</span>: <span class="pl-s">|</span>
+<span class="pl-s">    {</span>
+<span class="pl-s">    "ca-url": "https://localhost:9000",</span>
+<span class="pl-s">    "ca-config": "/home/step/config/ca.json",</span>
+<span class="pl-s">    "fingerprint": "93cff06dc36251fb0c4985d0b5ed7265a368cd70697fba90355c93cc4aabff0d",</span>
+<span class="pl-s">    "root": "/home/step/certs/root_ca.crt"</span>
+<span class="pl-s">    }</span>
+<span class="pl-s"></span>  <span class="pl-ent">intermediate_ca_key</span>: <span class="pl-s">|</span>
+<span class="pl-s">    &lt;YOUR INTERMEDIATE CA KEY&gt;</span>
+<span class="pl-s"></span>  <span class="pl-ent">password</span>: <span class="pl-s">|</span>
+<span class="pl-s">    &lt;YOUR STEP CA ADMIN PASSWORD&gt;</span>
+<span class="pl-s"></span>  <span class="pl-ent">leaf.tpl</span>: <span class="pl-s">|</span>
+<span class="pl-s">    {</span>
+<span class="pl-s">    "subject": {{ toJson .subject }},</span>
+<span class="pl-s">    {{- if .Insecure.User.dnsName }}</span>
+<span class="pl-s">    "dnsNames": {{ toJSON .Insecure.User.dnsName }},</span>
+<span class="pl-s">    {{- else }}</span>
+<span class="pl-s">    "sans": {{ toJson .SANs }},</span>
+<span class="pl-s">    {{- end }}</span>
+<span class="pl-s">    {{-if typeIs "*rsa.PublicKey" .Insecure.CR.PublicKey }}</span>
+<span class="pl-s">    "keyUsage": ["keyEncipherment", "digitalSignature"],</span>
+<span class="pl-s">    {{- else }}</span>
+<span class="pl-s">    "keyUsage": ["digitalSignature"],</span>
+<span class="pl-s">    {{- end }}</span>
+<span class="pl-s">    "extKeyUsage": ["serverAuth", "clientAuth]</span>
+<span class="pl-s">    }</span>
+<span class="pl-s"></span>---
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">apps/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Deployment</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">replicas</span>: <span class="pl-c1">1</span>
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">matchLabels</span>:
+      <span class="pl-ent">app</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">template</span>:
+    <span class="pl-ent">metadata</span>:
+      <span class="pl-ent">labels</span>:
+        <span class="pl-ent">app</span>: <span class="pl-s">stepca</span>
+    <span class="pl-ent">spec</span>:
+      <span class="pl-ent">containers</span>:
+        - <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+          <span class="pl-ent">image</span>: <span class="pl-s">smallstep/step-ca:0.23.0</span>
+          <span class="pl-ent">ports</span>:
+            - <span class="pl-ent">containerPort</span>: <span class="pl-c1">9000</span>
+          <span class="pl-ent">env</span>:
+            - <span class="pl-ent">name</span>: <span class="pl-s">DOCKER_STEPCA_INIT_NAME</span>
+        <span class="pl-ent">value</span>: <span class="pl-s">stepca</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">DOCKER_STEPCA_INIT_DNS_NAMES</span>
+        <span class="pl-ent">value</span>: <span class="pl-s">localhost, ca.domain.org</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">DOCKER_STEPCA_INIT_PROVISIONER_NAME</span>
+        <span class="pl-ent">value</span>: <span class="pl-s">admin</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">DOCKER_STEP_CA_INIT_PASSWORD</span>
+        <span class="pl-ent">valueFrom</span>:
+          <span class="pl-ent">secretKeyRef</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">stepca-config</span>
+            <span class="pl-ent">key</span>: <span class="pl-s">password</span>
+      <span class="pl-ent">volumeMounts</span>:
+        - <span class="pl-ent">mountPath</span>: <span class="pl-s">/home/step</span>
+          <span class="pl-ent">name</span>: <span class="pl-s">stepca-config</span>
+          <span class="pl-ent">readOnly</span>: <span class="pl-c1">false</span>
+      <span class="pl-ent">volumes</span>:
+        - <span class="pl-ent">name</span>: <span class="pl-s">stepca-config</span>
+          <span class="pl-ent">secret</span>:
+            <span class="pl-ent">secretName</span>: <span class="pl-s">stepca-config</span>
+            <span class="pl-ent">items</span>:
+              - <span class="pl-ent">key</span>: <span class="pl-s">intermediate_ca.crt</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">certs/intermediate_ca.crt</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">root_ca.crt</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">certs/root_ca.crt</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">ca.json</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">config/ca.json</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">defaults.json</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">config/defaults.json</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">intermediate_ca_key</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">secrets/intermediate_ca_key</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">password</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">secrets/password</span>
+              - <span class="pl-ent">key</span>: <span class="pl-s">leaf.tpl</span>
+                <span class="pl-ent">path</span>: <span class="pl-s">templates/certs/x509/leaf.tpl</span>
+              <span class="pl-ent">defaultMode</span>: <span class="pl-c1">0755</span>
+---
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Service</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">labels</span>:
+    <span class="pl-ent">app</span>: <span class="pl-s">stepca</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">type</span>: <span class="pl-s">ClusterIP</span>
+  <span class="pl-ent">ports</span>:
+  - <span class="pl-ent">port</span>: <span class="pl-c1">9000</span>
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">app</span>: <span class="pl-s">stepca</span>
+---
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">networking.k8s.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Ingress</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca-ingress</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">annotations</span>:
+    <span class="pl-ent">kubernetes.io/ingress.class</span>: <span class="pl-s"><span class="pl-pds">'</span>nginx<span class="pl-pds">'</span></span>
+    <span class="pl-ent">nginx.ingress.kubernetes.io/backend-protocol</span>: <span class="pl-s"><span class="pl-pds">'</span>HTTPS<span class="pl-pds">'</span></span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">tls</span>:
+    - <span class="pl-ent">hosts</span>:
+        - <span class="pl-s">ca.domain.org</span>
+        <span class="pl-ent">secretName</span>: <span class="pl-s">stepca-tls</span>
+  <span class="pl-ent">rules</span>:
+    - <span class="pl-ent">host</span>: <span class="pl-s">ca.domain.org</span>
+      <span class="pl-ent">http</span>:
+        <span class="pl-ent">paths</span>:
+          - <span class="pl-ent">path</span>: <span class="pl-s">/</span>
+            <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+            <span class="pl-ent">backend</span>:
+              <span class="pl-ent">service</span>:
+                <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+                <span class="pl-ent">port</span>:
+                  <span class="pl-ent">number</span>: <span class="pl-c1">9000</span>
+---
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">autoscaling/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">HorizontalPodAutoscaler</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">namespace</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">labels</span>:
+    <span class="pl-ent">app</span>: <span class="pl-s">stepca</span>
+    <span class="pl-ent">resource</span>: <span class="pl-s">horizontalpodautoscaler</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">maxReplicas</span>: <span class="pl-c1">6</span>
+  <span class="pl-ent">minReplicas</span>: <span class="pl-c1">1</span>
+  <span class="pl-ent">scaleTargetRef</span>:
+    <span class="pl-ent">apiVersion</span>: <span class="pl-s">apps/v1</span>
+    <span class="pl-ent">kind</span>: <span class="pl-s">Deployment</span>
+    <span class="pl-ent">name</span>: <span class="pl-s">stepca</span>
+  <span class="pl-ent">targetCPUUtilizationPercentage</span>: <span class="pl-c1">80</span></pre></div>
+<p>You check the health of your Intermediate Certificate Authority:</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">curl https://ca.domain.org/health
+
+<span class="pl-c"><span class="pl-c">#</span> {"status":"ok"}</span>
+
+curl https://ca.domain.org/acme/acme/directory
+
+<span class="pl-c"><span class="pl-c">#</span> {"newNonce":"https://ca.domain.org/acme/acme/new-nonce","newAccount":"https://ca.domain.org/acme/acme/new-account","newOrder":"https://ca.domain.org/acme/acme/new-order","revokeCert":"https://ca.domain.org/acme/acme/revoke-cert","keyChange":"https://ca.domain.org/acme/acme/key-change"}</span></pre></div>
+</div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">Comments</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://sachua.github.io"> Chua Song Ann </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"Run "+diffDay+" Days"+" • ";}
+    else{document.getElementById("runday").innerHTML="Run "+diffDay+" Days"+" • ";}
+}
+</script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6e5f9312111a41788a6b0fc8b4b7d6e5"}'></script><!-- End Cloudflare Web Analytics -->
+</div>
+</body>
+<script>
+var IconList={'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z', 'pinned': 'M17.14 6.51c-.21.16-.41.31-.6.44s-.39.24-.6.32-.42.14-.64.17-.47.02-.75 0c-.19-.02-.37-.06-.54-.12l-3.56 2.78c.05.22.07.45.08.67s0 .45-.03.68c-.05.36-.12.69-.23.98s-.25.55-.41.8-.36.47-.59.68-.48.43-.75.65l-2.81-3.64-4.51 3.46-1.18.23.52-1.09 4.52-3.45-2.81-3.64c.28-.22.54-.41.8-.57s.53-.3.8-.4.57-.17.87-.21c.3-.04.64-.04 1.01.02.22.03.44.07.66.13s.43.14.63.24l3.56-2.78c-.01-.18 0-.36.02-.55.03-.27.09-.52.18-.73s.19-.41.33-.59.29-.35.45-.5.36-.31.58-.48l5.03 6.51z', 'link': 'm7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z', 'about': 'M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z', 'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z', 'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z', 'upload': 'M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z'};
+var utterancesLoad=0;
+if(localStorage.getItem("meek_theme")==null){
+    const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+    if (systemSettingDark.matches) {
+        localStorage.setItem("meek_theme", "dark"); changeDark();
+    }
+    else {
+        localStorage.setItem("meek_theme", "light"); changeLight();
+    }
+}
+else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
+else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
+
+function changeDark(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
+    if(utterancesLoad==1){utterancesTheme("dark-blue");}
+}
+function changeLight(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
+    if(utterancesLoad==1){utterancesTheme("github-light");}
+}
+function modeSwitch(){
+    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
+    else{changeLight();localStorage.setItem("meek_theme","light");}
+}
+function utterancesTheme(theme){
+    const message = {type: 'set-theme',theme: theme};
+    const iframe = document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+}
+    
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+</script>
+
+<script>
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="Loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","sachua/sachua.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+</script>
+
+
+
+
+</html>
