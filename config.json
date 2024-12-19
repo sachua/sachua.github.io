@@ -7,7 +7,8 @@
     "avatarUrl":"https://sachua.github.io/lightning.svg",
     "faviconUrl":"http://sachua.github.io/lightning.svg",
     "singlePage":["about"],
-    "allHead":"<script src='https://raw.githubusercontent.com/sachua/Gmeek/refs/heads/main/plugins/GmeekVercount.js'></script>",
-    "script":"<script src='https://raw.githubusercontent.com/sachua/Gmeek/refs/heads/main/plugins/lightbox.js'></script>",
+    "startSite":"12/12/2023",
+    "allHead":"<script src='https://sachua.github.io/Gmeek/plugins/GmeekVercount.js'></script>",
+    "script":"<script src='https://sachua.github.io/Gmeek/plugins/lightbox.js'></script>",
     "GMEEK_VERSION":"main"
 }
