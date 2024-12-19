@@ -35,8 +35,6 @@ A quick look at the 3 NAT rules set:
   </picture>
 </p>
 
-`Gmeek-html<img alt="Rule 1 illustration" src="https://github.com/user-attachments/assets/69d6ba70-d70c-4da2-aeab-dd9cd7ba504a" width="1000" style="filter: invert(1) hue-rotate(180deg);">`
-
 For Cluster-to-Cluster traffic, SNAT rule 1 is applied, Cluster B will see the incoming traffic IP address as the Node IP of Cluster A
 
 **Rule 2:**
