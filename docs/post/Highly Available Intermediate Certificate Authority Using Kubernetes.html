@@ -6,7 +6,7 @@
     <meta name="google-site-verification" content="JeWlKxAawgJGz33wLuQ1gqTnXignb8IyWaYOe4ovFoI" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href='https://cdnjs.cloudflare.com/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
-    <script src='https://raw.githubusercontent.com/sachua/Gmeek/refs/heads/main/plugins/GmeekVercount.js'></script>
+    <script src='https://sachua.github.io/Gmeek/plugins/GmeekVercount.js'></script>
     <link rel="icon" href="http://sachua.github.io/lightning.svg"><script>
         let theme = localStorage.getItem("meek_theme") || "dark";
         document.documentElement.setAttribute("data-color-mode", theme);
@@ -668,8 +668,8 @@ curl https://ca.domain.org/acme/acme/directory
 var now=new Date();
 document.getElementById("copyrightYear").innerHTML=now.getFullYear();
 
-if(""!=""){
-    var startSite=new Date("");
+if("12/12/2023"!=""){
+    var startSite=new Date("12/12/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("runday").innerHTML="Run "+diffDay+" Days"+" • ";
@@ -819,6 +819,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
-<script src='https://raw.githubusercontent.com/sachua/Gmeek/refs/heads/main/plugins/lightbox.js'></script>
+<script src='https://sachua.github.io/Gmeek/plugins/lightbox.js'></script>
 
 </html>
