@@ -1,0 +1,9 @@
+In an internal hackathon at work, I formed a team to tackle the challenge of abstracting away underlying technical infrastructure complexities for our citizen developers.
+
+As part of the technical architecture design, we chose to build our solution to run on Kubernetes, leveraging on GitOps to deploy our applications to the Kubernetes cluster.
+
+Our company traditionally uses a push-based approach to GitOps using GitLab runners. This is easy to scale across different teams deploying to different Kubernetes clusters because there is no need to install or maintain any dependencies. However, we implemented a pull-based approach for this product since we wanted a adopt better security model, preventing our GitLab from having direct access to our clusters. Pull-based approach is also more congruent with the reconciliation and eventual consistent properties of Kubernetes.
+
+This worked fine for the most part, until our product got so popular that the number of applications hosted on our platform started growing exponentially. We had set the reconciliation loop to 1 minute to minimize wait times during initial application creation. But we soon realized the reconciliation took longer than 1 minute to complete due to the sheer number of resources, and our pull-based approach was struggling to keep up: the controller was still stuck trying to reconcile the previous loop while it was supposed to reconcile the next iteration!
+
+By switching to an event-driven approach, we increased the reconciliation loop time, and configured the GitLab repository to send a webhook notification whenever there is a push to the repository. This webhook trigger will then run a reconciliation with the required updates to the resources in the Kubernetes cluster. The end result is a less noisy Kubernetes cluster (less cluster events), and we can now continue to scale up and support larger numbers of applications and resources.
