@@ -11,9 +11,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="This implementaton will be using cilium v1.">
+<meta name="description" content="We will be installing a 1-node Kubernetes cluster using Talos Linux.">
 <meta property="og:title" content="Manual steps to install Talos on VMware Workstation Airgapped">
-<meta property="og:description" content="This implementaton will be using cilium v1.">
+<meta property="og:description" content="We will be installing a 1-node Kubernetes cluster using Talos Linux.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sachua.github.io/post/Manual%20steps%20to%20install%20Talos%20on%20VMware%20Workstation%20Airgapped.html">
 <meta property="og:image" content="https://sachua.github.io/lightning.svg">
@@ -84,7 +84,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>This implementaton will be using cilium v1.17.5 instead of the default flannel cni</p>
+<div class="markdown-body" id="postBody"><p>We will be installing a 1-node Kubernetes cluster using Talos Linux.<br>
+This implementaton will be using cilium v1.17.5 instead of the default flannel cni.</p>
 <h2>1. Retrieve container references for system extensions</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">$ docker pull ghcr.io/siderolabs/extensions:v1.10.4
 $ docker save ghcr.io/siderolabs/extensions:v1.10.4 <span class="pl-k">|</span> cat <span class="pl-k">|</span> grep -A vmtoolsd-guest-agent

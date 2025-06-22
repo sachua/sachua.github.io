@@ -1,4 +1,5 @@
-This implementaton will be using cilium v1.17.5 instead of the default flannel cni
+We will be installing a 1-node Kubernetes cluster using Talos Linux. 
+This implementaton will be using cilium v1.17.5 instead of the default flannel cni.
 
 ## 1. Retrieve container references for system extensions
 ```bash
