@@ -152,7 +152,9 @@ talosctl apply-config --insecure --nodes ${REPLACE_WITH_NODE_IP} --file cp1.yaml
     <span class="pl-ent">hostname</span>: <span class="pl-s">control-plane-1</span>
     <span class="pl-ent">interfaces</span>:
     - <span class="pl-ent">interface</span>: <span class="pl-s">ens33</span>
-      <span class="pl-ent">dhcp</span>: <span class="pl-c1">true</span>
+      <span class="pl-ent">dhcp</span>: <span class="pl-c1">false</span>
+      <span class="pl-ent">addresses</span>:
+        - <span class="pl-s">${REPLACE_WITH_NODE_IP}/24</span>
       <span class="pl-ent">vip</span>:
         <span class="pl-ent">ip</span>: <span class="pl-s">${REPLACE_WITH_NODE_IP}</span>
 <span class="pl-ent">cluster</span>:

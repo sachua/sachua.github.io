@@ -67,7 +67,9 @@ machine:
     hostname: control-plane-1
     interfaces:
     - interface: ens33
-      dhcp: true
+      dhcp: false
+      addresses:
+        - ${REPLACE_WITH_NODE_IP}/24
       vip:
         ip: ${REPLACE_WITH_NODE_IP}
 cluster:
