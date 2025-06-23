@@ -23,9 +23,9 @@ jobs:
 
       - name: Get config.json
         run: |
-          echo "====== check config.josn file ======"
+          echo "====== check config.json file ======"
           cat config.json
-          echo "====== check config.josn end  ======"
+          echo "====== check config.json end  ======"
           sudo apt-get install jq
 
       - name: Set up Python
