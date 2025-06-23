@@ -67,11 +67,9 @@ machine:
     hostname: control-plane-1
     interfaces:
     - interface: ens33
-      dhcp: false
-      addresses:
-        - ${REPLACE_WITH_NODE_IP}/24
+      dhcp: true
       vip:
-        ip: ${REPLACE_WITH_NODE_IP}
+        ip: ${REPLACE_WITH_ENDPOINT_IP}
 cluster:
   apiServer:
     extraArgs:
