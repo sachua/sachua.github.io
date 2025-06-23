@@ -7,9 +7,9 @@ $ docker pull ghcr.io/siderolabs/extensions:v1.10.4
 $ docker save ghcr.io/siderolabs/extensions:v1.10.4 | cat | grep -A vmtoolsd-guest-agent
 ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c
 ```
-## 2. Create installer image with includes system extensions and push to image registry
+## 2. Create installer image to include system extensions and push to image registry
 ```bash
-$ docker run --rm -t -v $PWD/_out:/out ghcr.io/siderolabs/imager:v1.10.4 installer --system-extension-image ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c --system-extension-image ghcr.io/siderolabs/amd-ucode:20250509@sha256:97223ca040629773931c6905cb2e913777f8ff5496f183c1b6d0bd67d9bd70de
+$ docker run --rm -t -v $PWD/_out:/out ghcr.io/siderolabs/imager:v1.10.4 installer --system-extension-image ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c
 $ docker load -i _out/installer-amd64.tar
 $ docker tag ghcr.io/siderolabs/installer-base:v1.10.4 sachua/talos-vmware-installer:v1.10.4
 $ docker push sachua/talos-vmware-installer:v1.10.4
