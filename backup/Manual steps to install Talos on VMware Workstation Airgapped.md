@@ -4,7 +4,7 @@ This implementaton will be using cilium v1.17.5 instead of the default flannel c
 ## 1. Retrieve container references for system extensions
 ```bash
 $ docker pull ghcr.io/siderolabs/extensions:v1.10.4
-$ docker save ghcr.io/siderolabs/extensions:v1.10.4 | cat | grep -A vmtoolsd-guest-agent
+$ docker save ghcr.io/siderolabs/extensions:v1.10.4 | cat | grep -a vmtoolsd-guest-agent
 ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c
 ```
 ## 2. Create installer image to include system extensions and push to image registry

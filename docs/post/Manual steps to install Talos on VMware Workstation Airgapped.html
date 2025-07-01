@@ -88,7 +88,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 This implementaton will be using cilium v1.17.5 instead of the default flannel cni.</p>
 <h2>1. Retrieve container references for system extensions</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">$ docker pull ghcr.io/siderolabs/extensions:v1.10.4
-$ docker save ghcr.io/siderolabs/extensions:v1.10.4 <span class="pl-k">|</span> cat <span class="pl-k">|</span> grep -A vmtoolsd-guest-agent
+$ docker save ghcr.io/siderolabs/extensions:v1.10.4 <span class="pl-k">|</span> cat <span class="pl-k">|</span> grep -a vmtoolsd-guest-agent
 ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c</pre></div>
 <h2>2. Create installer image to include system extensions and push to image registry</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">$ docker run --rm -t -v <span class="pl-smi">$PWD</span>/_out:/out ghcr.io/siderolabs/imager:v1.10.4 installer --system-extension-image ghcr.io/siderolabs/vmtoolsd-guest-agent:v1.0.0@sha256:b80dc11ea312cfe4bf3d8351fe210a76b61c6db04ed30f7b1700d13f473c9e4c
