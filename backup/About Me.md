@@ -1,6 +1,6 @@
 <p align="center">
   <picture>
-    <img src="https://avatars.githubusercontent.com/u/41395198" width="150" height="150"/>
+    <img src="https://avatars.githubusercontent.com/u/41395198" width="200" height="200"/>
   </picture>
 </p>
 
